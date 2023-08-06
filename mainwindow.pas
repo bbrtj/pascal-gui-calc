@@ -5,7 +5,8 @@ unit MainWindow;
 interface
 
 uses
-	Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls;
+	Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls,
+	PN;
 
 type
 
