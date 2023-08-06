@@ -1,0 +1,20 @@
+object MainForm: TMainForm
+  Left = 200
+  Height = 190
+  Top = 100
+  Width = 811
+  BorderStyle = bsSingle
+  Caption = 'MainForm'
+  ClientHeight = 190
+  ClientWidth = 811
+  DesignTimePPI = 102
+  LCLVersion = '2.2.6.0'
+  object GroupBox1: TGroupBox
+    Left = 37
+    Height = 112
+    Top = 64
+    Width = 197
+    Caption = 'GroupBox1'
+    TabOrder = 0
+  end
+end
