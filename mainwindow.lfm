@@ -16,8 +16,23 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   Position = poDefault
   LCLVersion = '2.2.6.0'
-  object ActionList1: TActionList
+  object ActionShortcuts: TActionList
     Left = 743
     Top = 32
+    object NewCalc: TAction
+      Caption = 'New calculator'
+      OnExecute = AddCalculator
+      ShortCut = 16462
+    end
+    object DoCalcAll: TAction
+      Caption = 'Calculate All'
+      OnExecute = CalculateAll
+      ShortCut = 8205
+    end
+    object DoCalc: TAction
+      Caption = 'Calculate'
+      OnExecute = CalculateOne
+      ShortCut = 13
+    end
   end
 end

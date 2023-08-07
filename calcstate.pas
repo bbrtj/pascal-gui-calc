@@ -12,7 +12,7 @@ uses
 type
 	TCalcHandler = class
 	private
-		FName: String[20];
+		FName: ShortString;
 		FParser: TPN;
 		FFrame: TControl;
 		FCalculated: Double;
@@ -22,6 +22,8 @@ type
 
 		function Calculate(const vExpr: String): String;
 
+		property Name: ShortString read FName write FName;
+		property Frame: TControl read FFrame write FFrame;
 		property LastCalculated: Double read FCalculated;
 	end;
 
@@ -35,7 +37,10 @@ type
 		destructor Destroy; override;
 
 		function AddCalculator(const vName: String; vFrame: TControl): TCalcHandler;
+		function RemoveCalculator(vCalc: TCalcHandler): TControl;
+		procedure SetVariables(vParser: TPN);
 
+		property AllCalculators: TCalcHandlerList read FCalcs;
 	end;
 
 var
@@ -59,7 +64,7 @@ end;
 function TCalcHandler.Calculate(const vExpr: String): String;
 begin
 	FParser.ParseString(vExpr);
-	// TODO: Add variables
+	GlobalCalcState.SetVariables(FParser);
 	// TODO: try/catch
 	FCalculated := FParser.GetResult;
 	result := FloatToStr(FCalculated);
@@ -79,6 +84,22 @@ function TCalcState.AddCalculator(const vName: String; vFrame: TControl): TCalcH
 begin
 	result := TCalcHandler.Create(vName, vFrame);
 	FCalcs.Add(result);
+end;
+
+function TCalcState.RemoveCalculator(vCalc: TCalcHandler): TControl;
+begin
+	result := vCalc.Frame;
+	FCalcs.Remove(vCalc);
+end;
+
+procedure TCalcState.SetVariables(vParser: TPN);
+var
+	vCalc: TCalcHandler;
+begin
+	vParser.ClearVariables;
+
+	for vCalc in FCalcs do
+		vParser.DefineVariable(vCalc.Name, vCalc.LastCalculated);
 end;
 
 initialization

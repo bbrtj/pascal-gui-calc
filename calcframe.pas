@@ -26,6 +26,9 @@ type
 	public
 		constructor Create(TheOwner: TComponent); override;
 
+		procedure Calculate();
+		function IsSelected(): Boolean;
+
 		property Handler: TCalcHandler read FHandler write FHandler;
 	end;
 
@@ -40,7 +43,7 @@ var
 
 procedure TCalcView.CalcButtonClick(Sender: TObject);
 begin
-	CalcResultEdit.Text := FHandler.Calculate(CalcEdit.Text);
+	Calculate;
 end;
 
 constructor TCalcView.Create(TheOwner: TComponent);
@@ -50,6 +53,16 @@ begin
 	inc(LastView);
 	self.Name := self.Name + IntToStr(LastView);
 	self.Expression.Caption := self.Expression.Caption + IntToStr(LastView);
+end;
+
+procedure TCalcView.Calculate;
+begin
+	CalcResultEdit.Text := FHandler.Calculate(CalcEdit.Text);
+end;
+
+function TCalcView.IsSelected: Boolean;
+begin
+	result := CalcEdit.Focused or CalcResultEdit.Focused;
 end;
 
 initialization
