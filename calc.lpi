@@ -41,6 +41,19 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainWindow"/>
       </Unit>
+      <Unit>
+        <Filename Value="calcframe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CalcView"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="CalcFrame"/>
+      </Unit>
+      <Unit>
+        <Filename Value="calcstate.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CalcState"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

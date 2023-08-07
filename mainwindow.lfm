@@ -1,20 +1,23 @@
 object MainForm: TMainForm
   Left = 200
-  Height = 190
+  Height = 241
   Top = 100
-  Width = 811
+  Width = 857
+  AutoSize = True
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
-  Caption = 'MainForm'
-  ClientHeight = 190
-  ClientWidth = 811
-  DesignTimePPI = 102
+  Caption = 'Calculator'
+  ChildSizing.LeftRightSpacing = 8
+  ChildSizing.TopBottomSpacing = 8
+  ChildSizing.VerticalSpacing = 8
+  ChildSizing.Layout = cclLeftToRightThenTopToBottom
+  ChildSizing.ControlsPerLine = 1
+  DesignTimePPI = 103
+  OnCreate = FormCreate
+  Position = poDefault
   LCLVersion = '2.2.6.0'
-  object GroupBox1: TGroupBox
-    Left = 37
-    Height = 112
-    Top = 64
-    Width = 197
-    Caption = 'GroupBox1'
-    TabOrder = 0
+  object ActionList1: TActionList
+    Left = 743
+    Top = 32
   end
 end

@@ -1,0 +1,75 @@
+object CalcView: TCalcView
+  Left = 0
+  Height = 293
+  Top = 0
+  Width = 931
+  AutoSize = True
+  ClientHeight = 293
+  ClientWidth = 931
+  DesignTimePPI = 103
+  ParentFont = False
+  TabOrder = 0
+  DesignLeft = 720
+  DesignTop = 30
+  object Expression: TGroupBox
+    Left = 0
+    Height = 71
+    Top = 0
+    Width = 808
+    Caption = 'expr'
+    ClientHeight = 45
+    ClientWidth = 802
+    TabOrder = 0
+    object CopyButton: TButton
+      Left = 8
+      Height = 27
+      Top = 8
+      Width = 32
+      Caption = 'M+'
+      Font.Height = -9
+      ParentFont = False
+      TabOrder = 0
+    end
+    object PasteButton: TButton
+      Left = 48
+      Height = 27
+      Top = 8
+      Width = 32
+      Caption = 'MR'
+      Font.Height = -9
+      ParentFont = False
+      TabOrder = 1
+    end
+    object CalcEdit: TEdit
+      Left = 89
+      Height = 27
+      Top = 8
+      Width = 444
+      AutoSelect = False
+      Font.Height = -16
+      ParentFont = False
+      TabOrder = 2
+    end
+    object CalcButton: TButton
+      Left = 541
+      Height = 27
+      Top = 8
+      Width = 32
+      Caption = '->'
+      Font.Height = -9
+      OnClick = CalcButtonClick
+      ParentFont = False
+      TabOrder = 3
+    end
+    object CalcResultEdit: TEdit
+      Left = 582
+      Height = 27
+      Top = 8
+      Width = 210
+      Font.Height = -16
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 4
+    end
+  end
+end
