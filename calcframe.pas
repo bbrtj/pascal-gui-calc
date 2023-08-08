@@ -20,6 +20,8 @@ type
 		Expression: TGroupBox;
 		PasteButton: TButton;
 		procedure CalcButtonClick(Sender: TObject);
+		procedure CopyButtonClick(Sender: TObject);
+		procedure PasteButtonClick(Sender: TObject);
 	private
 		FHandler: TCalcHandler;
 
@@ -44,6 +46,16 @@ var
 procedure TCalcView.CalcButtonClick(Sender: TObject);
 begin
 	Calculate;
+end;
+
+procedure TCalcView.CopyButtonClick(Sender: TObject);
+begin
+	GlobalCalcState.Memory := CalcEdit.Text;
+end;
+
+procedure TCalcView.PasteButtonClick(Sender: TObject);
+begin
+	CalcEdit.Text := GlobalCalcState.Memory;
 end;
 
 constructor TCalcView.Create(TheOwner: TComponent);

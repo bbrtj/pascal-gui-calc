@@ -6,7 +6,7 @@ interface
 
 uses
 	Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ActnList,
-	ExtCtrls,
+	ExtCtrls, Menus, LCLIntf,
 	CalcFrame, CalcState;
 
 type
@@ -14,16 +14,33 @@ type
 	{ TMainForm }
 
  TMainForm = class(TForm)
+		ExitProgram: TAction;
 		DoCalc: TAction;
 		DoCalcAll: TAction;
 		ActionShortcuts: TActionList;
+		MainMenu: TMainMenu;
+		MenuItemCalculateAll: TMenuItem;
+		MenuItemAddCalculator: TMenuItem;
+		MenuItemSyntax: TMenuItem;
+		MenuItemHelp: TMenuItem;
+		MenuItemCalculate: TMenuItem;
+		MenuItemCalculator: TMenuItem;
+		MenuItemFile: TMenuItem;
+		MenuItemNew: TMenuItem;
+		MenuItemOpen: TMenuItem;
+		MenuItemSave: TMenuItem;
+		MenuItemExit: TMenuItem;
 		NewCalc: TAction;
-		procedure AddCalculator(Sender: TObject);
-		procedure CalculateAll(Sender: TObject);
-		procedure CalculateOne(Sender: TObject);
+		Separator1: TMenuItem;
+		Separator2: TMenuItem;
+		procedure NewCalcExecute(Sender: TObject);
+		procedure DoCalcAllExecute(Sender: TObject);
+		procedure DoCalcExecute(Sender: TObject);
+		procedure ExitProgramExecute(Sender: TObject);
 		procedure FormCreate(Sender: TObject);
 	private
 		procedure AddCalculator();
+		procedure UpdatePosition;
 	public
 
 
@@ -42,6 +59,8 @@ procedure TMainForm.AddCalculator();
 var
 	CalcView: TCalcView;
 begin
+	UpdatePosition;
+
 	CalcView := TCalcView.Create(self);
 	self.InsertControl(CalcView);
 
@@ -50,18 +69,27 @@ begin
 	);
 end;
 
-procedure TMainForm.FormCreate(Sender: TObject);
+procedure TMainForm.UpdatePosition;
+var
+	rect: TRect;
+begin
+	// Workaround for Left and Top not updating in some WMs
+    GetWindowRect(self.Handle, rect);
+    self.Left := rect.Left;
+    self.Top := rect.Top;
+end;
 
+procedure TMainForm.FormCreate(Sender: TObject);
 begin
 	self.AddCalculator();
 end;
 
-procedure TMainForm.AddCalculator(Sender: TObject);
+procedure TMainForm.NewCalcExecute(Sender: TObject);
 begin
 	AddCalculator();
 end;
 
-procedure TMainForm.CalculateAll(Sender: TObject);
+procedure TMainForm.DoCalcAllExecute(Sender: TObject);
 var
 	CalcHandler: TCalcHandler;
 begin
@@ -70,7 +98,7 @@ begin
 	end;
 end;
 
-procedure TMainForm.CalculateOne(Sender: TObject);
+procedure TMainForm.DoCalcExecute(Sender: TObject);
 var
 	CalcHandler: TCalcHandler;
 begin
@@ -78,6 +106,11 @@ begin
 		if TCalcView(CalcHandler.Frame).IsSelected then
 			TCalcView(CalcHandler.Frame).Calculate;
 	end;
+end;
+
+procedure TMainForm.ExitProgramExecute(Sender: TObject);
+begin
+	Close;
 end;
 
 end.

@@ -1,8 +1,8 @@
 object MainForm: TMainForm
-  Left = 200
-  Height = 241
-  Top = 100
-  Width = 857
+  Left = 1063
+  Height = 237
+  Top = 364
+  Width = 946
   AutoSize = True
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
@@ -13,6 +13,7 @@ object MainForm: TMainForm
   ChildSizing.Layout = cclLeftToRightThenTopToBottom
   ChildSizing.ControlsPerLine = 1
   DesignTimePPI = 103
+  Menu = MainMenu
   OnCreate = FormCreate
   Position = poDefault
   LCLVersion = '2.2.6.0'
@@ -21,18 +22,65 @@ object MainForm: TMainForm
     Top = 32
     object NewCalc: TAction
       Caption = 'New calculator'
-      OnExecute = AddCalculator
+      OnExecute = NewCalcExecute
       ShortCut = 16462
     end
     object DoCalcAll: TAction
       Caption = 'Calculate All'
-      OnExecute = CalculateAll
+      OnExecute = DoCalcAllExecute
       ShortCut = 8205
     end
     object DoCalc: TAction
       Caption = 'Calculate'
-      OnExecute = CalculateOne
+      OnExecute = DoCalcExecute
       ShortCut = 13
+    end
+    object ExitProgram: TAction
+      Caption = 'Exit Program'
+      OnExecute = ExitProgramExecute
+    end
+  end
+  object MainMenu: TMainMenu
+    Left = 765
+    Top = 148
+    object MenuItemFile: TMenuItem
+      Caption = 'File'
+      object MenuItemNew: TMenuItem
+        Caption = 'New'
+      end
+      object MenuItemOpen: TMenuItem
+        Caption = 'Open'
+      end
+      object MenuItemSave: TMenuItem
+        Caption = 'Save'
+      end
+      object Separator1: TMenuItem
+        Caption = '-'
+      end
+      object MenuItemExit: TMenuItem
+        Action = ExitProgram
+      end
+    end
+    object MenuItemCalculator: TMenuItem
+      Caption = 'Calculator'
+      object MenuItemCalculate: TMenuItem
+        Action = DoCalc
+      end
+      object MenuItemCalculateAll: TMenuItem
+        Action = DoCalcAll
+      end
+      object Separator2: TMenuItem
+        Caption = '-'
+      end
+      object MenuItemAddCalculator: TMenuItem
+        Action = NewCalc
+      end
+    end
+    object MenuItemHelp: TMenuItem
+      Caption = 'Help'
+      object MenuItemSyntax: TMenuItem
+        Caption = 'Syntax'
+      end
     end
   end
 end

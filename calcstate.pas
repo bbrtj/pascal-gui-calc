@@ -32,6 +32,7 @@ type
 	TCalcState = class
 	private
 		FCalcs: TCalcHandlerList;
+		FMemory: String;
 	public
 		constructor Create();
 		destructor Destroy; override;
@@ -41,6 +42,7 @@ type
 		procedure SetVariables(vParser: TPN);
 
 		property AllCalculators: TCalcHandlerList read FCalcs;
+		property Memory: String read FMemory write FMemory;
 	end;
 
 var
