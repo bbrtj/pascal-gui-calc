@@ -82,29 +82,29 @@ object CalcView: TCalcView
       Action = ActionCalculate
     end
     object MenuItemRename: TMenuItem
-      Caption = 'Rename'
+      Action = ActionRename
     end
     object Separator1: TMenuItem
       Caption = '-'
     end
     object MenuItemRemove: TMenuItem
-      Caption = 'Remove'
+      Action = ActionRemove
     end
   end
   object CalculatorActions: TActionList
     Left = 328
     Top = 72
     object ActionCalculate: TAction
-      Caption = 'ActionCalculate'
+      Caption = 'Calculate'
       OnExecute = ActionCalculateExecute
       ShortCut = 13
     end
     object ActionRename: TAction
-      Caption = 'ActionRename'
+      Caption = 'Rename'
       OnExecute = ActionRenameExecute
     end
     object ActionRemove: TAction
-      Caption = 'ActionRemove'
+      Caption = 'Remove'
       OnExecute = ActionRemoveExecute
     end
     object ActionMemoryStore: TAction

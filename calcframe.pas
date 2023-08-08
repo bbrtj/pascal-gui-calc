@@ -5,7 +5,8 @@ unit CalcFrame;
 interface
 
 uses
-	Classes, SysUtils, Forms, Controls, StdCtrls, Menus, Buttons, ActnList,
+	Classes, SysUtils, Forms, Controls, StdCtrls,
+	Dialogs, Menus, Buttons, ActnList,
 	CalcState;
 
 type
@@ -74,12 +75,24 @@ end;
 
 procedure TCalcView.ActionRemoveExecute(Sender: TObject);
 begin
-
+	GlobalCalcState.RemoveCalculator(self.Handler);
+	TForm(Owner).RemoveControl(self);
 end;
 
 procedure TCalcView.ActionRenameExecute(Sender: TObject);
+var
+	NewName: String;
 begin
+	NewName := InputBox(
+		'Rename calculator',
+		'Enter new name for the calculator',
+		self.Handler.Name
+	);
 
+	// TODO: validate NewName
+
+	self.Expression.Caption := NewName;
+	self.Handler.Name := NewName;
 end;
 
 constructor TCalcView.Create(TheOwner: TComponent);
