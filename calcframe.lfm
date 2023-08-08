@@ -15,63 +15,105 @@ object CalcView: TCalcView
     Left = 0
     Height = 71
     Top = 0
-    Width = 808
+    Width = 784
     Caption = 'expr'
     ClientHeight = 45
-    ClientWidth = 802
+    ClientWidth = 778
+    PopupMenu = CalcMenu
     TabOrder = 0
     object CopyButton: TButton
-      Left = 8
+      Left = 9
       Height = 27
       Top = 8
-      Width = 32
-      Caption = 'MS'
+      Width = 33
+      Action = ActionMemoryStore
       Font.Height = -9
-      OnClick = CopyButtonClick
       ParentFont = False
       TabOrder = 0
     end
     object PasteButton: TButton
-      Left = 48
+      Left = 50
       Height = 27
       Top = 8
-      Width = 32
-      Caption = 'MR'
+      Width = 33
+      Action = ActionMemoryRead
       Font.Height = -9
-      OnClick = PasteButtonClick
       ParentFont = False
       TabOrder = 1
     end
     object CalcEdit: TEdit
-      Left = 89
+      Left = 90
       Height = 27
       Top = 8
-      Width = 444
+      Width = 448
       AutoSelect = False
       Font.Height = -16
       ParentFont = False
       TabOrder = 2
     end
-    object CalcButton: TButton
-      Left = 541
-      Height = 27
-      Top = 8
-      Width = 32
-      Caption = '->'
-      Font.Height = -9
-      OnClick = CalcButtonClick
-      ParentFont = False
-      TabOrder = 3
-    end
     object CalcResultEdit: TEdit
-      Left = 582
+      Left = 562
       Height = 27
       Top = 8
-      Width = 210
+      Width = 206
       Font.Height = -16
       ParentFont = False
       ReadOnly = True
-      TabOrder = 4
+      TabOrder = 3
+    end
+    object LabelEquals: TLabel
+      Left = 538
+      Height = 27
+      Top = 8
+      Width = 24
+      Alignment = taCenter
+      AutoSize = False
+      Caption = '='
+      Font.Height = 22
+      ParentColor = False
+      ParentFont = False
+      OptimalFill = True
+    end
+  end
+  object CalcMenu: TPopupMenu
+    Left = 280
+    Top = 72
+    object MenuItemCalculate: TMenuItem
+      Action = ActionCalculate
+    end
+    object MenuItemRename: TMenuItem
+      Caption = 'Rename'
+    end
+    object Separator1: TMenuItem
+      Caption = '-'
+    end
+    object MenuItemRemove: TMenuItem
+      Caption = 'Remove'
+    end
+  end
+  object CalculatorActions: TActionList
+    Left = 328
+    Top = 72
+    object ActionCalculate: TAction
+      Caption = 'ActionCalculate'
+      OnExecute = ActionCalculateExecute
+      ShortCut = 13
+    end
+    object ActionRename: TAction
+      Caption = 'ActionRename'
+      OnExecute = ActionRenameExecute
+    end
+    object ActionRemove: TAction
+      Caption = 'ActionRemove'
+      OnExecute = ActionRemoveExecute
+    end
+    object ActionMemoryStore: TAction
+      Caption = 'MS'
+      OnExecute = ActionMemoryStoreExecute
+    end
+    object ActionMemoryRead: TAction
+      Caption = 'MR'
+      OnExecute = ActionMemoryReadExecute
     end
   end
 end

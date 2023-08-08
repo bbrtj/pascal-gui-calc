@@ -14,29 +14,28 @@ type
 	{ TMainForm }
 
  TMainForm = class(TForm)
-		ExitProgram: TAction;
-		DoCalc: TAction;
-		DoCalcAll: TAction;
+		ActionCalculate: TAction;
+		ActionExitProgram: TAction;
+		ActionCalculateAll: TAction;
 		ActionShortcuts: TActionList;
 		MainMenu: TMainMenu;
 		MenuItemCalculateAll: TMenuItem;
 		MenuItemAddCalculator: TMenuItem;
 		MenuItemSyntax: TMenuItem;
 		MenuItemHelp: TMenuItem;
-		MenuItemCalculate: TMenuItem;
 		MenuItemCalculator: TMenuItem;
 		MenuItemFile: TMenuItem;
 		MenuItemNew: TMenuItem;
 		MenuItemOpen: TMenuItem;
 		MenuItemSave: TMenuItem;
 		MenuItemExit: TMenuItem;
-		NewCalc: TAction;
+		ActionNewCalculator: TAction;
 		Separator1: TMenuItem;
 		Separator2: TMenuItem;
-		procedure NewCalcExecute(Sender: TObject);
-		procedure DoCalcAllExecute(Sender: TObject);
-		procedure DoCalcExecute(Sender: TObject);
-		procedure ExitProgramExecute(Sender: TObject);
+		procedure ActionCalculateExecute(Sender: TObject);
+  		procedure ActionNewCalculatorExecute(Sender: TObject);
+		procedure ActionCalculateAllExecute(Sender: TObject);
+		procedure ActionExitProgramExecute(Sender: TObject);
 		procedure FormCreate(Sender: TObject);
 	private
 		procedure AddCalculator();
@@ -84,21 +83,12 @@ begin
 	self.AddCalculator();
 end;
 
-procedure TMainForm.NewCalcExecute(Sender: TObject);
+procedure TMainForm.ActionNewCalculatorExecute(Sender: TObject);
 begin
 	AddCalculator();
 end;
 
-procedure TMainForm.DoCalcAllExecute(Sender: TObject);
-var
-	CalcHandler: TCalcHandler;
-begin
-	for CalcHandler in GlobalCalcState.AllCalculators do begin
-		TCalcView(CalcHandler.Frame).Calculate;
-	end;
-end;
-
-procedure TMainForm.DoCalcExecute(Sender: TObject);
+procedure TMainForm.ActionCalculateExecute(Sender: TObject);
 var
 	CalcHandler: TCalcHandler;
 begin
@@ -108,7 +98,16 @@ begin
 	end;
 end;
 
-procedure TMainForm.ExitProgramExecute(Sender: TObject);
+procedure TMainForm.ActionCalculateAllExecute(Sender: TObject);
+var
+	CalcHandler: TCalcHandler;
+begin
+	for CalcHandler in GlobalCalcState.AllCalculators do begin
+		TCalcView(CalcHandler.Frame).Calculate;
+	end;
+end;
+
+procedure TMainForm.ActionExitProgramExecute(Sender: TObject);
 begin
 	Close;
 end;

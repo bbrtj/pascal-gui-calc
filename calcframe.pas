@@ -5,7 +5,7 @@ unit CalcFrame;
 interface
 
 uses
-	Classes, SysUtils, Forms, Controls, StdCtrls,
+	Classes, SysUtils, Forms, Controls, StdCtrls, Menus, Buttons, ActnList,
 	CalcState;
 
 type
@@ -13,15 +13,29 @@ type
 	{ TCalcView }
 
  TCalcView = class(TFrame)
+		ActionCalculate: TAction;
+		ActionRename: TAction;
+		ActionRemove: TAction;
+		ActionMemoryStore: TAction;
+		ActionMemoryRead: TAction;
+		CalculatorActions: TActionList;
 		CalcButton: TButton;
 		CalcEdit: TEdit;
 		CalcResultEdit: TEdit;
 		CopyButton: TButton;
 		Expression: TGroupBox;
+		LabelEquals: TLabel;
+		MenuItemCalculate: TMenuItem;
+		MenuItemRemove: TMenuItem;
+		MenuItemRename: TMenuItem;
 		PasteButton: TButton;
-		procedure CalcButtonClick(Sender: TObject);
-		procedure CopyButtonClick(Sender: TObject);
-		procedure PasteButtonClick(Sender: TObject);
+		CalcMenu: TPopupMenu;
+		Separator1: TMenuItem;
+		procedure ActionCalculateExecute(Sender: TObject);
+		procedure ActionMemoryReadExecute(Sender: TObject);
+		procedure ActionMemoryStoreExecute(Sender: TObject);
+		procedure ActionRemoveExecute(Sender: TObject);
+		procedure ActionRenameExecute(Sender: TObject);
 	private
 		FHandler: TCalcHandler;
 
@@ -43,19 +57,29 @@ implementation
 var
    LastView: Cardinal;
 
-procedure TCalcView.CalcButtonClick(Sender: TObject);
+procedure TCalcView.ActionCalculateExecute(Sender: TObject);
 begin
 	Calculate;
 end;
 
-procedure TCalcView.CopyButtonClick(Sender: TObject);
+procedure TCalcView.ActionMemoryReadExecute(Sender: TObject);
+begin
+	CalcEdit.Text := GlobalCalcState.Memory;
+end;
+
+procedure TCalcView.ActionMemoryStoreExecute(Sender: TObject);
 begin
 	GlobalCalcState.Memory := CalcEdit.Text;
 end;
 
-procedure TCalcView.PasteButtonClick(Sender: TObject);
+procedure TCalcView.ActionRemoveExecute(Sender: TObject);
 begin
-	CalcEdit.Text := GlobalCalcState.Memory;
+
+end;
+
+procedure TCalcView.ActionRenameExecute(Sender: TObject);
+begin
+
 end;
 
 constructor TCalcView.Create(TheOwner: TComponent);
@@ -67,7 +91,7 @@ begin
 	self.Expression.Caption := self.Expression.Caption + IntToStr(LastView);
 end;
 
-procedure TCalcView.Calculate;
+procedure TCalcView.Calculate();
 begin
 	CalcResultEdit.Text := FHandler.Calculate(CalcEdit.Text);
 end;

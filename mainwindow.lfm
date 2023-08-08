@@ -20,24 +20,24 @@ object MainForm: TMainForm
   object ActionShortcuts: TActionList
     Left = 743
     Top = 32
-    object NewCalc: TAction
+    object ActionNewCalculator: TAction
       Caption = 'New calculator'
-      OnExecute = NewCalcExecute
+      OnExecute = ActionNewCalculatorExecute
       ShortCut = 16462
     end
-    object DoCalcAll: TAction
+    object ActionCalculateAll: TAction
       Caption = 'Calculate All'
-      OnExecute = DoCalcAllExecute
+      OnExecute = ActionCalculateAllExecute
       ShortCut = 8205
     end
-    object DoCalc: TAction
-      Caption = 'Calculate'
-      OnExecute = DoCalcExecute
-      ShortCut = 13
-    end
-    object ExitProgram: TAction
+    object ActionExitProgram: TAction
       Caption = 'Exit Program'
-      OnExecute = ExitProgramExecute
+      OnExecute = ActionExitProgramExecute
+    end
+    object ActionCalculate: TAction
+      Caption = 'ActionCalculate'
+      OnExecute = ActionCalculateExecute
+      ShortCut = 13
     end
   end
   object MainMenu: TMainMenu
@@ -58,22 +58,19 @@ object MainForm: TMainForm
         Caption = '-'
       end
       object MenuItemExit: TMenuItem
-        Action = ExitProgram
+        Action = ActionExitProgram
       end
     end
     object MenuItemCalculator: TMenuItem
       Caption = 'Calculator'
-      object MenuItemCalculate: TMenuItem
-        Action = DoCalc
-      end
       object MenuItemCalculateAll: TMenuItem
-        Action = DoCalcAll
+        Action = ActionCalculateAll
       end
       object Separator2: TMenuItem
         Caption = '-'
       end
       object MenuItemAddCalculator: TMenuItem
-        Action = NewCalc
+        Action = ActionNewCalculator
       end
     end
     object MenuItemHelp: TMenuItem
