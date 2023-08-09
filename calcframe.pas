@@ -130,7 +130,8 @@ end;
 
 procedure TCalcView.Calculate();
 begin
-	CalcResultEdit.Text := FHandler.Calculate(CalcEdit.Text);
+	if CalcEdit.Text <> '' then
+		CalcResultEdit.Text := FHandler.Calculate(CalcEdit.Text);
 end;
 
 function TCalcView.IsSelected: Boolean;

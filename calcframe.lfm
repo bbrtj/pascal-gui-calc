@@ -1,51 +1,50 @@
 object CalcView: TCalcView
   Left = 0
-  Height = 111
+  Height = 103
   Top = 0
-  Width = 847
+  Width = 789
   AutoSize = True
-  ClientHeight = 111
-  ClientWidth = 847
-  DesignTimePPI = 103
+  ClientHeight = 103
+  ClientWidth = 789
   ParentFont = False
   TabOrder = 0
   DesignLeft = 720
   DesignTop = 30
   object Expression: TGroupBox
     Left = 0
-    Height = 71
+    Height = 66
     Top = 0
-    Width = 784
+    Width = 731
     Caption = 'expr'
-    ClientHeight = 45
-    ClientWidth = 778
+    ClientHeight = 42
+    ClientWidth = 725
     PopupMenu = CalcMenu
     TabOrder = 0
     object CopyButton: TButton
-      Left = 9
-      Height = 27
-      Top = 8
-      Width = 33
+      Left = 8
+      Height = 25
+      Top = 7
+      Width = 31
       Action = ActionMemoryStore
       Font.Height = -9
       ParentFont = False
       TabOrder = 0
     end
     object PasteButton: TButton
-      Left = 50
-      Height = 27
-      Top = 8
-      Width = 33
+      Left = 47
+      Height = 25
+      Top = 7
+      Width = 31
       Action = ActionMemoryRead
       Font.Height = -9
       ParentFont = False
       TabOrder = 1
     end
     object CalcEdit: TEdit
-      Left = 90
+      Left = 84
       Height = 27
-      Top = 8
-      Width = 448
+      Top = 7
+      Width = 418
       AutoSelect = False
       Font.Height = -16
       OnChange = CalcEditChange
@@ -53,20 +52,20 @@ object CalcView: TCalcView
       TabOrder = 2
     end
     object CalcResultEdit: TEdit
-      Left = 562
+      Left = 524
       Height = 27
-      Top = 8
-      Width = 206
+      Top = 7
+      Width = 192
       Font.Height = -16
       ParentFont = False
       ReadOnly = True
       TabOrder = 3
     end
     object LabelEquals: TLabel
-      Left = 538
-      Height = 27
-      Top = 8
-      Width = 24
+      Left = 501
+      Height = 25
+      Top = 7
+      Width = 22
       Alignment = taCenter
       AutoSize = False
       Caption = '='
@@ -77,8 +76,8 @@ object CalcView: TCalcView
     end
   end
   object CalcMenu: TPopupMenu
-    Left = 280
-    Top = 72
+    Left = 261
+    Top = 67
     object MenuItemCalculate: TMenuItem
       Action = ActionCalculate
     end
@@ -93,8 +92,8 @@ object CalcView: TCalcView
     end
   end
   object CalculatorActions: TActionList
-    Left = 328
-    Top = 72
+    Left = 306
+    Top = 67
     object ActionCalculate: TAction
       Caption = 'Calculate'
       OnExecute = ActionCalculateExecute
