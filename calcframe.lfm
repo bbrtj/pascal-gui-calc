@@ -48,6 +48,7 @@ object CalcView: TCalcView
       Width = 448
       AutoSelect = False
       Font.Height = -16
+      OnChange = CalcEditChange
       ParentFont = False
       TabOrder = 2
     end

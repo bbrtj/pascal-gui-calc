@@ -6,7 +6,7 @@ interface
 
 uses
 	Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ActnList,
-	ExtCtrls, Menus, LCLIntf,
+	ExtCtrls, Menus, LCLIntf, StrUtils,
 	CalcFrame, CalcState;
 
 type
@@ -14,6 +14,9 @@ type
 	{ TMainForm }
 
  TMainForm = class(TForm)
+		ActionNew: TAction;
+		ActionOpen: TAction;
+		ActionSave: TAction;
 		ActionCalculate: TAction;
 		ActionExitProgram: TAction;
 		ActionCalculateAll: TAction;
@@ -30,16 +33,27 @@ type
 		MenuItemSave: TMenuItem;
 		MenuItemExit: TMenuItem;
 		ActionNewCalculator: TAction;
+		OpenDialog: TOpenDialog;
+		SaveDialog: TSaveDialog;
 		Separator1: TMenuItem;
 		Separator2: TMenuItem;
 		procedure ActionCalculateExecute(Sender: TObject);
   		procedure ActionNewCalculatorExecute(Sender: TObject);
 		procedure ActionCalculateAllExecute(Sender: TObject);
 		procedure ActionExitProgramExecute(Sender: TObject);
+		procedure ActionNewExecute(Sender: TObject);
+		procedure ActionOpenExecute(Sender: TObject);
+		procedure ActionSaveExecute(Sender: TObject);
 		procedure FormCreate(Sender: TObject);
 	private
-		procedure AddCalculator();
+		procedure AddCalculator(const customName: String = ''; const Content: String = '');
 		procedure UpdatePosition;
+		function CheckDirty: Boolean;
+
+		procedure ClearCalculators();
+
+		procedure LoadFromFile;
+		procedure SaveToFile;
 	public
 
 
@@ -54,18 +68,13 @@ implementation
 
 { TMainForm }
 
-procedure TMainForm.AddCalculator();
+procedure TMainForm.AddCalculator(const customName: String; const Content: String);
 var
 	CalcView: TCalcView;
 begin
-	UpdatePosition;
-
-	CalcView := TCalcView.Create(self);
+	CalcView := TCalcView.Create(self, customName);
 	self.InsertControl(CalcView);
-
-	CalcView.Handler := GlobalCalcState.AddCalculator(
-		CalcView.Expression.Caption, CalcView
-	);
+	CalcView.Content := Content;
 end;
 
 procedure TMainForm.UpdatePosition;
@@ -78,6 +87,80 @@ begin
     self.Top := rect.Top;
 end;
 
+function TMainForm.CheckDirty: Boolean;
+begin
+	result := True;
+	if GlobalCalcState.Dirty then begin
+		case MessageDlg(
+			'Would you like to save changes?',
+			mtConfirmation,
+			mbYesNoCancel,
+			0,
+			mbCancel
+		) of
+			mrYes: ActionSave.Execute;
+			mrNo: GlobalCalcState.Dirty := False;
+			mrCancel: exit(False);
+		end;
+
+		result := not GlobalCalcState.Dirty;
+	end;
+end;
+
+procedure TMainForm.ClearCalculators;
+var
+	CalcHandler: TCalcHandler;
+begin
+	ResetNumbers;
+
+	for CalcHandler in GlobalCalcState.AllCalculators do begin
+		self.RemoveControl(CalcHandler.Frame);
+		CalcHandler.Frame.Free;
+	end;
+
+	GlobalCalcState.AllCalculators.Clear;
+end;
+
+procedure TMainForm.LoadFromFile;
+var
+	FileContents: TStringList;
+	Line: String;
+	LineParts: TStringArray;
+begin
+	FileContents := TStringList.Create;
+	FileContents.LoadFromFile(GlobalCalcState.SavedAs);
+
+	for Line in FileContents do begin
+		LineParts := SplitString(Line, ':');
+		if length(LineParts) <> 2 then
+			continue;
+		if length(LineParts[0]) = 0 then
+			continue;
+
+		self.AddCalculator(LineParts[0], LineParts[1]);
+	end;
+
+	FileContents.Free;
+end;
+
+procedure TMainForm.SaveToFile;
+var
+	FileContents: TStringList;
+	CalcHandler: TCalcHandler;
+begin
+	FileContents := TStringList.Create;
+	for CalcHandler in GlobalCalcState.AllCalculators do begin
+		FileContents.Append(
+			CalcHandler.Name
+			+ ':'
+			+ TCalcView(CalcHandler.Frame).Content
+		);
+	end;
+
+	FileContents.SaveToFile(GlobalCalcState.SavedAs);
+	FileContents.Free;
+end;
+
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
 	self.AddCalculator();
@@ -85,7 +168,9 @@ end;
 
 procedure TMainForm.ActionNewCalculatorExecute(Sender: TObject);
 begin
-	AddCalculator();
+	self.UpdatePosition;
+	self.AddCalculator();
+	GlobalCalcState.Dirty := True;
 end;
 
 procedure TMainForm.ActionCalculateExecute(Sender: TObject);
@@ -109,7 +194,42 @@ end;
 
 procedure TMainForm.ActionExitProgramExecute(Sender: TObject);
 begin
+	if not self.CheckDirty() then exit;
 	Close;
+end;
+
+procedure TMainForm.ActionNewExecute(Sender: TObject);
+begin
+	if not self.CheckDirty() then exit;
+
+	self.UpdatePosition();
+	self.ClearCalculators();
+	self.AddCalculator();
+	GlobalCalcState.SavedAs := '';
+end;
+
+procedure TMainForm.ActionOpenExecute(Sender: TObject);
+begin
+	if not self.CheckDirty() then exit;
+	if OpenDialog.Execute then begin
+		GlobalCalcState.SavedAs := OpenDialog.Filename;
+		self.UpdatePosition();
+		self.ClearCalculators();
+		self.LoadFromFile();
+	end;
+end;
+
+procedure TMainForm.ActionSaveExecute(Sender: TObject);
+begin
+	if GlobalCalcState.SavedAs = '' then begin
+		if SaveDialog.Execute then
+			GlobalCalcState.SavedAs := SaveDialog.Filename
+		else
+			exit;
+	end;
+
+	self.SaveToFile;
+	GlobalCalcState.Dirty := False;
 end;
 
 end.

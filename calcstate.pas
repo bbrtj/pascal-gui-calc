@@ -33,6 +33,8 @@ type
 	private
 		FCalcs: TCalcHandlerList;
 		FMemory: String;
+		FDirty: Boolean;
+		FSavedAs: String;
 	public
 		constructor Create();
 		destructor Destroy; override;
@@ -43,6 +45,8 @@ type
 
 		property AllCalculators: TCalcHandlerList read FCalcs;
 		property Memory: String read FMemory write FMemory;
+		property Dirty: Boolean read FDirty write FDirty;
+		property SavedAs: String read FSavedAs write FSavedAs;
 	end;
 
 var
@@ -75,6 +79,10 @@ end;
 constructor TCalcState.Create();
 begin
 	FCalcs := TCalcHandlerList.Create;
+
+	FMemory := '';
+	FDirty := False;
+	FSavedAs := '';
 end;
 
 destructor TCalcState.Destroy;

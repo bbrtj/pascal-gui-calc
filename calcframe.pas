@@ -37,17 +37,23 @@ type
 		procedure ActionMemoryStoreExecute(Sender: TObject);
 		procedure ActionRemoveExecute(Sender: TObject);
 		procedure ActionRenameExecute(Sender: TObject);
+		procedure CalcEditChange(Sender: TObject);
 	private
 		FHandler: TCalcHandler;
 
 	public
-		constructor Create(TheOwner: TComponent); override;
+		constructor Create(TheOwner: TComponent; customName: String = '');
 
 		procedure Calculate();
 		function IsSelected(): Boolean;
+		procedure SetContent(const Content: String);
+		function GetContent(): String;
 
+		property Content: String read GetContent write SetContent;
 		property Handler: TCalcHandler read FHandler write FHandler;
 	end;
+
+procedure ResetNumbers;
 
 implementation
 
@@ -57,6 +63,11 @@ implementation
 
 var
    LastView: Cardinal;
+
+procedure ResetNumbers;
+begin
+	LastView := 0;
+end;
 
 procedure TCalcView.ActionCalculateExecute(Sender: TObject);
 begin
@@ -77,6 +88,8 @@ procedure TCalcView.ActionRemoveExecute(Sender: TObject);
 begin
 	GlobalCalcState.RemoveCalculator(self.Handler);
 	TForm(Owner).RemoveControl(self);
+	GlobalCalcState.Dirty := True;
+	self.Free;
 end;
 
 procedure TCalcView.ActionRenameExecute(Sender: TObject);
@@ -93,15 +106,26 @@ begin
 
 	self.Expression.Caption := NewName;
 	self.Handler.Name := NewName;
+	GlobalCalcState.Dirty := True;
 end;
 
-constructor TCalcView.Create(TheOwner: TComponent);
+procedure TCalcView.CalcEditChange(Sender: TObject);
+begin
+	GlobalCalcState.Dirty := True;
+end;
+
+constructor TCalcView.Create(TheOwner: TComponent; customName: String = '');
 begin
 	inherited Create(TheOwner);
 
 	inc(LastView);
+	if customName = '' then
+		customName := self.Expression.Caption + IntToStr(LastView);
+
 	self.Name := self.Name + IntToStr(LastView);
-	self.Expression.Caption := self.Expression.Caption + IntToStr(LastView);
+	self.Expression.Caption := customName;
+
+	FHandler := GlobalCalcState.AddCalculator(customName, self);
 end;
 
 procedure TCalcView.Calculate();
@@ -114,7 +138,17 @@ begin
 	result := CalcEdit.Focused or CalcResultEdit.Focused;
 end;
 
+procedure TCalcView.SetContent(const Content: String);
+begin
+	CalcEdit.Text := Content;
+end;
+
+function TCalcView.GetContent: String;
+begin
+	result := CalcEdit.Text;
+end;
+
 initialization
-	LastView := 0;
+	ResetNumbers;
 end.
 
