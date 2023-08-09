@@ -1,0 +1,3 @@
+[submodule "pascal-pn"]
+	path = pascal-pn
+	url = git@github.com:bbrtj/pascal-pn.git
