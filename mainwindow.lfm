@@ -1,8 +1,8 @@
 object MainForm: TMainForm
-  Left = 1063
-  Height = 263
-  Top = 364
-  Width = 460
+  Left = 100
+  Height = 245
+  Top = 100
+  Width = 429
   AutoSize = True
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
@@ -12,14 +12,13 @@ object MainForm: TMainForm
   ChildSizing.VerticalSpacing = 8
   ChildSizing.Layout = cclLeftToRightThenTopToBottom
   ChildSizing.ControlsPerLine = 1
-  DesignTimePPI = 103
   Menu = MainMenu
+  OnClose = FormClose
   OnCreate = FormCreate
-  Position = poDefault
   LCLVersion = '2.2.6.0'
   object ActionShortcuts: TActionList
-    Left = 152
-    Top = 48
+    Left = 142
+    Top = 45
     object ActionNewCalculator: TAction
       Caption = 'New calculator'
       OnExecute = ActionNewCalculatorExecute
@@ -54,10 +53,15 @@ object MainForm: TMainForm
       OnExecute = ActionSaveExecute
       ShortCut = 16467
     end
+    object ActionSaveAs: TAction
+      Caption = 'Save as...'
+      OnExecute = ActionSaveAsExecute
+      ShortCut = 24659
+    end
   end
   object MainMenu: TMainMenu
-    Left = 160
-    Top = 128
+    Left = 149
+    Top = 119
     object MenuItemFile: TMenuItem
       Caption = 'File'
       object MenuItemNew: TMenuItem
@@ -68,6 +72,9 @@ object MainForm: TMainForm
       end
       object MenuItemSave: TMenuItem
         Action = ActionSave
+      end
+      object MenuItemSaveAs: TMenuItem
+        Action = ActionSaveAs
       end
       object Separator1: TMenuItem
         Caption = '-'
@@ -98,14 +105,14 @@ object MainForm: TMainForm
   object SaveDialog: TSaveDialog
     DefaultExt = '.calc'
     Filter = 'Saved calculator states|*.calc'
-    Left = 274
-    Top = 90
+    Left = 255
+    Top = 84
   end
   object OpenDialog: TOpenDialog
     DefaultExt = '.calc'
     Filter = 'Saved calculator states|*.calc'
     Options = [ofPathMustExist, ofFileMustExist, ofEnableSizing, ofViewDetail]
-    Left = 286
-    Top = 26
+    Left = 267
+    Top = 24
   end
 end

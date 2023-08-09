@@ -14,6 +14,7 @@ type
 	{ TMainForm }
 
  TMainForm = class(TForm)
+		ActionSaveAs: TAction;
 		ActionNew: TAction;
 		ActionOpen: TAction;
 		ActionSave: TAction;
@@ -22,6 +23,7 @@ type
 		ActionCalculateAll: TAction;
 		ActionShortcuts: TActionList;
 		MainMenu: TMainMenu;
+		MenuItemSaveAs: TMenuItem;
 		MenuItemCalculateAll: TMenuItem;
 		MenuItemAddCalculator: TMenuItem;
 		MenuItemSyntax: TMenuItem;
@@ -43,7 +45,9 @@ type
 		procedure ActionExitProgramExecute(Sender: TObject);
 		procedure ActionNewExecute(Sender: TObject);
 		procedure ActionOpenExecute(Sender: TObject);
+		procedure ActionSaveAsExecute(Sender: TObject);
 		procedure ActionSaveExecute(Sender: TObject);
+		procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
 		procedure FormCreate(Sender: TObject);
 	private
 		procedure AddCalculator(const customName: String = ''; const Content: String = '');
@@ -163,6 +167,8 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+	SaveDialog.InitialDir := GetUserDir;
+	OpenDialog.InitialDir := GetUserDir;
 	self.AddCalculator();
 end;
 
@@ -194,7 +200,6 @@ end;
 
 procedure TMainForm.ActionExitProgramExecute(Sender: TObject);
 begin
-	if not self.CheckDirty() then exit;
 	Close;
 end;
 
@@ -219,6 +224,17 @@ begin
 	end;
 end;
 
+procedure TMainForm.ActionSaveAsExecute(Sender: TObject);
+begin
+	if SaveDialog.Execute then
+		GlobalCalcState.SavedAs := SaveDialog.Filename
+	else
+		exit;
+
+	self.SaveToFile;
+	GlobalCalcState.Dirty := False;
+end;
+
 procedure TMainForm.ActionSaveExecute(Sender: TObject);
 begin
 	if GlobalCalcState.SavedAs = '' then begin
@@ -230,6 +246,12 @@ begin
 
 	self.SaveToFile;
 	GlobalCalcState.Dirty := False;
+end;
+
+procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+	if not self.CheckDirty() then
+		CloseAction := caNone;
 end;
 
 end.
