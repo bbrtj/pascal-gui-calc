@@ -3,19 +3,21 @@ object MainForm: TMainForm
   Height = 245
   Top = 100
   Width = 429
-  AutoSize = True
+  VertScrollBar.Increment = 60
+  VertScrollBar.Tracking = True
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Calculator'
   ChildSizing.LeftRightSpacing = 8
   ChildSizing.TopBottomSpacing = 8
-  ChildSizing.VerticalSpacing = 8
+  ChildSizing.VerticalSpacing = 4
   ChildSizing.Layout = cclLeftToRightThenTopToBottom
   ChildSizing.ControlsPerLine = 1
   Menu = MainMenu
   OnClose = FormClose
   OnCreate = FormCreate
-  LCLVersion = '2.2.6.0'
+  OnResize = FormResize
+  LCLVersion = '3.99.0.0'
   object ActionShortcuts: TActionList
     Left = 142
     Top = 45

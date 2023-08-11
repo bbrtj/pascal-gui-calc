@@ -6,8 +6,8 @@ interface
 
 uses
 	Classes, SysUtils, Forms, Controls, StdCtrls,
-	Dialogs, Menus, Buttons, ActnList,
-	CalcState;
+	Dialogs, Menus, Buttons, ActnList, Math,
+	CalcState, CalcTypes, Types;
 
 type
 
@@ -38,6 +38,8 @@ type
 		procedure ActionRemoveExecute(Sender: TObject);
 		procedure ActionRenameExecute(Sender: TObject);
 		procedure CalcEditChange(Sender: TObject);
+		procedure FrameMouseWheel(Sender: TObject; Shift: TShiftState;
+			WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
 	private
 		FHandler: TCalcHandler;
 
@@ -86,10 +88,7 @@ end;
 
 procedure TCalcView.ActionRemoveExecute(Sender: TObject);
 begin
-	GlobalCalcState.RemoveCalculator(self.Handler);
-	TForm(Owner).RemoveControl(self);
-	GlobalCalcState.Dirty := True;
-	self.Free;
+	(self.Owner as IFormWithCalculator).RemoveCalculator(FHandler);
 end;
 
 procedure TCalcView.ActionRenameExecute(Sender: TObject);
@@ -114,6 +113,16 @@ begin
 	GlobalCalcState.Dirty := True;
 end;
 
+procedure TCalcView.FrameMouseWheel(Sender: TObject; Shift: TShiftState;
+	WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+var
+	ParentScroll: TControlScrollBar;
+begin
+	ParentScroll := (self.Parent as TScrollingWinControl).VertScrollBar;
+    ParentScroll.Position := ParentScroll.Position - Sign(WheelDelta) * ParentScroll.Increment;
+	Handled := True;
+end;
+
 constructor TCalcView.Create(TheOwner: TComponent; customName: String = '');
 begin
 	inherited Create(TheOwner);
@@ -125,7 +134,7 @@ begin
 	self.Name := self.Name + IntToStr(LastView);
 	self.Expression.Caption := customName;
 
-	FHandler := GlobalCalcState.AddCalculator(customName, self);
+	FHandler := TCalcHandler.Create(customName, self);
 end;
 
 procedure TCalcView.Calculate();

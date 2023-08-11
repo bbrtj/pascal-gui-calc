@@ -40,6 +40,7 @@ type
 		destructor Destroy; override;
 
 		function AddCalculator(const vName: String; vFrame: TControl): TCalcHandler;
+		function AddCalculator(const vCalc: TCalcHandler): TCalcHandler;
 		function RemoveCalculator(vCalc: TCalcHandler): TControl;
 		procedure SetVariables(vParser: TPN);
 
@@ -92,7 +93,12 @@ end;
 
 function TCalcState.AddCalculator(const vName: String; vFrame: TControl): TCalcHandler;
 begin
-	result := TCalcHandler.Create(vName, vFrame);
+	result := self.AddCalculator(TCalcHandler.Create(vName, vFrame));
+end;
+
+function TCalcState.AddCalculator(const vCalc: TCalcHandler): TCalcHandler;
+begin
+	result := vCalc;
 	FCalcs.Add(result);
 end;
 

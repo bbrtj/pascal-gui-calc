@@ -6,6 +6,7 @@ object CalcView: TCalcView
   AutoSize = True
   ClientHeight = 103
   ClientWidth = 789
+  OnMouseWheel = FrameMouseWheel
   ParentFont = False
   TabOrder = 0
   DesignLeft = 720

@@ -6,14 +6,14 @@ interface
 
 uses
 	Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ActnList,
-	ExtCtrls, Menus, LCLIntf, StrUtils,
-	CalcFrame, CalcState;
+	ExtCtrls, Menus, LCLIntf, StrUtils, Math, Types,
+	CalcFrame, CalcState, CalcTypes;
 
 type
 
 	{ TMainForm }
 
- TMainForm = class(TForm)
+ TMainForm = class(TForm, IFormWithCalculator)
 		ActionSaveAs: TAction;
 		ActionNew: TAction;
 		ActionOpen: TAction;
@@ -49,9 +49,11 @@ type
 		procedure ActionSaveExecute(Sender: TObject);
 		procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
 		procedure FormCreate(Sender: TObject);
+        procedure FormResize(Sender: TObject);
 	private
-		procedure AddCalculator(const customName: String = ''; const Content: String = '');
-		procedure UpdatePosition;
+		procedure AddCalculator(const CustomName: String = ''; const Content: String = '');
+		procedure RemoveCalculator(CalcHandler: TObject);
+        procedure AdjustPosition;
 		function CheckDirty: Boolean;
 
 		procedure ClearCalculators();
@@ -72,23 +74,69 @@ implementation
 
 { TMainForm }
 
-procedure TMainForm.AddCalculator(const customName: String; const Content: String);
+procedure TMainForm.AddCalculator(const CustomName: String; const Content: String);
 var
 	CalcView: TCalcView;
 begin
-	CalcView := TCalcView.Create(self, customName);
+	CalcView := TCalcView.Create(self, CustomName);
 	self.InsertControl(CalcView);
 	CalcView.Content := Content;
+
+	GlobalCalcState.AddCalculator(CalcView.Handler);
+	self.DoOnResize;
 end;
 
-procedure TMainForm.UpdatePosition;
+procedure TMainForm.RemoveCalculator(CalcHandler: TObject);
+var
+	CalcHandlerObj: TCalcHandler;
+begin
+	CalcHandlerObj := CalcHandler as TCalcHandler;
+	self.RemoveControl(CalcHandlerObj.Frame);
+	CalcHandlerObj.Frame.Free;
+	GlobalCalcState.RemoveCalculator(CalcHandlerObj);
+	GlobalCalcState.Dirty := True;
+
+	self.DoOnResize;
+end;
+
+procedure TMainForm.AdjustPosition;
+const
+	cVisibleCalculators = 5;
 var
 	rect: TRect;
+	VisibleN, TotalN: Integer;
+	VisibleHeight, TotalHeight: Integer;
+	TotalWidth: Integer;
+    Ind: Integer;
 begin
-	// Workaround for Left and Top not updating in some WMs
-    GetWindowRect(self.Handle, rect);
-    self.Left := rect.Left;
-    self.Top := rect.Top;
+	TotalN := self.ControlCount - 1;
+	if TotalN >= 0 then begin
+		VisibleN := Min(cVisibleCalculators - 1, TotalN);
+		VisibleHeight := self.ChildSizing.TopBottomSpacing * 2;
+		TotalHeight := VisibleHeight + self.ChildSizing.VerticalSpacing * TotalN;
+		VisibleHeight := VisibleHeight + self.ChildSizing.VerticalSpacing * VisibleN;
+		TotalWidth := 0;
+
+		for Ind := 0 to TotalN do begin
+			if Ind <= VisibleN then
+				VisibleHeight += self.Controls[Ind].Height;
+			TotalHeight += self.Controls[Ind].Height;
+			TotalWidth := Max(TotalWidth, self.Controls[Ind].Width);
+		end;
+
+		TotalWidth += self.ChildSizing.LeftRightSpacing * 2;
+    end
+	else begin
+		// some defaults
+		TotalWidth := 500;
+		TotalHeight := 80;
+		VisibleHeight := 80;
+	end;
+
+	GetWindowRect(self.Handle, rect);
+	self.SetBounds(rect.Left, rect.Top, TotalWidth, VisibleHeight);
+	self.VertScrollBar.Page := VisibleHeight;
+	self.VertScrollBar.Range := TotalHeight;
 end;
 
 function TMainForm.CheckDirty: Boolean;
@@ -123,6 +171,7 @@ begin
 	end;
 
 	GlobalCalcState.AllCalculators.Clear;
+	self.DoOnResize;
 end;
 
 procedure TMainForm.LoadFromFile;
@@ -172,9 +221,13 @@ begin
 	self.AddCalculator();
 end;
 
+procedure TMainForm.FormResize(Sender: TObject);
+begin
+	self.AdjustPosition;
+end;
+
 procedure TMainForm.ActionNewCalculatorExecute(Sender: TObject);
 begin
-	self.UpdatePosition;
 	self.AddCalculator();
 	GlobalCalcState.Dirty := True;
 end;
@@ -207,7 +260,6 @@ procedure TMainForm.ActionNewExecute(Sender: TObject);
 begin
 	if not self.CheckDirty() then exit;
 
-	self.UpdatePosition();
 	self.ClearCalculators();
 	self.AddCalculator();
 	GlobalCalcState.SavedAs := '';
@@ -218,7 +270,6 @@ begin
 	if not self.CheckDirty() then exit;
 	if OpenDialog.Execute then begin
 		GlobalCalcState.SavedAs := OpenDialog.Filename;
-		self.UpdatePosition();
 		self.ClearCalculators();
 		self.LoadFromFile();
 	end;
