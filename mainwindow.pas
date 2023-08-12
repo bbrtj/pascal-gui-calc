@@ -7,13 +7,14 @@ interface
 uses
 	Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ActnList,
 	ExtCtrls, Menus, LCLIntf, StrUtils, Math, Types,
-	CalcFrame, CalcState, CalcTypes;
+	CalcFrame, CalcState, CalcTypes, PNBase;
 
 type
 
 	{ TMainForm }
 
  TMainForm = class(TForm, IFormWithCalculator)
+		ActionSyntax: TAction;
 		ActionSaveAs: TAction;
 		ActionNew: TAction;
 		ActionOpen: TAction;
@@ -47,6 +48,7 @@ type
 		procedure ActionOpenExecute(Sender: TObject);
 		procedure ActionSaveAsExecute(Sender: TObject);
 		procedure ActionSaveExecute(Sender: TObject);
+		procedure ActionSyntaxExecute(Sender: TObject);
 		procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
 		procedure FormCreate(Sender: TObject);
         procedure FormResize(Sender: TObject);
@@ -237,8 +239,10 @@ var
 	CalcHandler: TCalcHandler;
 begin
 	for CalcHandler in GlobalCalcState.AllCalculators do begin
-		if TCalcView(CalcHandler.Frame).IsSelected then
+		if TCalcView(CalcHandler.Frame).IsSelected then begin
 			TCalcView(CalcHandler.Frame).Calculate;
+			break;
+		end;
 	end;
 end;
 
@@ -247,7 +251,8 @@ var
 	CalcHandler: TCalcHandler;
 begin
 	for CalcHandler in GlobalCalcState.AllCalculators do begin
-		TCalcView(CalcHandler.Frame).Calculate;
+		if not TCalcView(CalcHandler.Frame).Calculate then
+			break;
 	end;
 end;
 
@@ -266,13 +271,18 @@ begin
 end;
 
 procedure TMainForm.ActionOpenExecute(Sender: TObject);
+var
+	WasDirty: Boolean;
 begin
+	WasDirty := GlobalCalcState.Dirty;
 	if not self.CheckDirty() then exit;
 	if OpenDialog.Execute then begin
 		GlobalCalcState.SavedAs := OpenDialog.Filename;
 		self.ClearCalculators();
 		self.LoadFromFile();
-	end;
+	end
+	else
+		GlobalCalcState.Dirty := WasDirty;
 end;
 
 procedure TMainForm.ActionSaveAsExecute(Sender: TObject);
@@ -297,6 +307,17 @@ begin
 
 	self.SaveToFile;
 	GlobalCalcState.Dirty := False;
+end;
+
+procedure TMainForm.ActionSyntaxExecute(Sender: TObject);
+begin
+	MessageDlg(
+		'Syntax reference',
+		'Available operations:' + sLineBreak + TOperationInfo.Help(False),
+		mtInformation,
+		[mbOk],
+		0
+	);
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);

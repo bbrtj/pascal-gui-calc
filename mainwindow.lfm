@@ -60,6 +60,11 @@ object MainForm: TMainForm
       OnExecute = ActionSaveAsExecute
       ShortCut = 24659
     end
+    object ActionSyntax: TAction
+      Caption = 'Syntax'
+      OnExecute = ActionSyntaxExecute
+      ShortCut = 112
+    end
   end
   object MainMenu: TMainMenu
     Left = 149
@@ -100,7 +105,7 @@ object MainForm: TMainForm
     object MenuItemHelp: TMenuItem
       Caption = 'Help'
       object MenuItemSyntax: TMenuItem
-        Caption = 'Syntax'
+        Action = ActionSyntax
       end
     end
   end

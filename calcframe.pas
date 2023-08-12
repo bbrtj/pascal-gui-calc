@@ -6,8 +6,8 @@ interface
 
 uses
 	Classes, SysUtils, Forms, Controls, StdCtrls,
-	Dialogs, Menus, Buttons, ActnList, Math,
-	CalcState, CalcTypes, Types;
+	Dialogs, Menus, Buttons, ActnList, Math, Types,
+	CalcState, CalcTypes, PNBase;
 
 type
 
@@ -46,7 +46,7 @@ type
 	public
 		constructor Create(TheOwner: TComponent; customName: String = '');
 
-		procedure Calculate();
+		function Calculate: Boolean;
 		function IsSelected(): Boolean;
 		procedure SetContent(const Content: String);
 		function GetContent(): String;
@@ -101,8 +101,6 @@ begin
 		self.Handler.Name
 	);
 
-	// TODO: validate NewName
-
 	self.Expression.Caption := NewName;
 	self.Handler.Name := NewName;
 	GlobalCalcState.Dirty := True;
@@ -137,10 +135,32 @@ begin
 	FHandler := TCalcHandler.Create(customName, self);
 end;
 
-procedure TCalcView.Calculate();
+function TCalcView.Calculate(): Boolean;
+
+	procedure ShowCalcError(const ErrType: String; const ErrMessage: String);
+	begin
+		MessageDlg(
+			'Calculation error',
+			ErrType + ' error occured while executing ' + FHandler.Name + ': ' + sLineBreak + ErrMessage,
+			mtError,
+			[mbOk],
+			0
+		);
+	end;
+
 begin
-	if CalcEdit.Text <> '' then
-		CalcResultEdit.Text := FHandler.Calculate(CalcEdit.Text);
+	result := True;
+	if CalcEdit.Text <> '' then begin
+		result := False;
+		try
+			CalcResultEdit.Text := FHandler.Calculate(CalcEdit.Text);
+			result := True;
+		except
+			on E: EParsingFailed do ShowCalcError('Parsing', E.Message);
+			on E: ECalculationFailed do ShowCalcError('Evaluation', E.Message);
+			on E: Exception do ShowCalcError('Other', E.Message);
+		end;
+	end;
 end;
 
 function TCalcView.IsSelected: Boolean;

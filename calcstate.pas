@@ -72,7 +72,6 @@ function TCalcHandler.Calculate(const vExpr: String): String;
 begin
 	FParser.ParseString(vExpr);
 	GlobalCalcState.SetVariables(FParser);
-	// TODO: try/catch
 	FCalculated := FParser.GetResult;
 	result := FloatToStr(FCalculated);
 end;
