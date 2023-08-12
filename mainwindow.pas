@@ -313,7 +313,10 @@ procedure TMainForm.ActionSyntaxExecute(Sender: TObject);
 begin
 	MessageDlg(
 		'Syntax reference',
-		'Available operations:' + sLineBreak + TOperationInfo.Help(False),
+		'Available operations:' + sLineBreak + TOperationInfo.Help(False)
+		+ sLineBreak + 'Available constants:' + sLineBreak
+		+ 'PI: the pi constant' + sLineBreak
+		+ 'PHI: the golden ratio' + sLineBreak,
 		mtInformation,
 		[mbOk],
 		0

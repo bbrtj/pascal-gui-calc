@@ -1,11 +1,11 @@
 unit CalcState;
 
-{$mode ObjFPC}{$H+}
+{$mode objfpc}{$H+}{$J-}
 
 interface
 
 uses
-	Classes, SysUtils, Fgl, Controls,
+	Classes, SysUtils, Fgl, Controls, Math,
 	PN;
 
 
@@ -42,7 +42,7 @@ type
 		function AddCalculator(const vName: String; vFrame: TControl): TCalcHandler;
 		function AddCalculator(const vCalc: TCalcHandler): TCalcHandler;
 		function RemoveCalculator(vCalc: TCalcHandler): TControl;
-		procedure SetVariables(vParser: TPN);
+		procedure SetVariablesAndConstants(vParser: TPN);
 
 		property AllCalculators: TCalcHandlerList read FCalcs;
 		property Memory: String read FMemory write FMemory;
@@ -71,7 +71,7 @@ end;
 function TCalcHandler.Calculate(const vExpr: String): String;
 begin
 	FParser.ParseString(vExpr);
-	GlobalCalcState.SetVariables(FParser);
+	GlobalCalcState.SetVariablesAndConstants(FParser);
 	FCalculated := FParser.GetResult;
 	result := FloatToStr(FCalculated);
 end;
@@ -107,11 +107,15 @@ begin
 	FCalcs.Remove(vCalc);
 end;
 
-procedure TCalcState.SetVariables(vParser: TPN);
+procedure TCalcState.SetVariablesAndConstants(vParser: TPN);
 var
 	vCalc: TCalcHandler;
 begin
 	vParser.ClearVariables;
+
+	// constants
+	vParser.DefineVariable('PI', PI);
+	vParser.DefineVariable('PHI', (1 + 5 ** 0.5) / 2);
 
 	for vCalc in FCalcs do
 		vParser.DefineVariable(vCalc.Name, vCalc.LastCalculated);
