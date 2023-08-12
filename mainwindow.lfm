@@ -65,6 +65,11 @@ object MainForm: TMainForm
       OnExecute = ActionSyntaxExecute
       ShortCut = 112
     end
+    object ActionRename: TAction
+      Caption = 'ActionRename'
+      OnExecute = ActionRenameExecute
+      ShortCut = 16466
+    end
   end
   object MainMenu: TMainMenu
     Left = 149

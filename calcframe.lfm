@@ -103,6 +103,7 @@ object CalcView: TCalcView
     object ActionRename: TAction
       Caption = 'Rename'
       OnExecute = ActionRenameExecute
+      ShortCut = 16466
     end
     object ActionRemove: TAction
       Caption = 'Remove'

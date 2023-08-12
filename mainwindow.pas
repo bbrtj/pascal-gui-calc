@@ -14,6 +14,7 @@ type
 	{ TMainForm }
 
  TMainForm = class(TForm, IFormWithCalculator)
+		ActionRename: TAction;
 		ActionSyntax: TAction;
 		ActionSaveAs: TAction;
 		ActionNew: TAction;
@@ -46,6 +47,7 @@ type
 		procedure ActionExitProgramExecute(Sender: TObject);
 		procedure ActionNewExecute(Sender: TObject);
 		procedure ActionOpenExecute(Sender: TObject);
+		procedure ActionRenameExecute(Sender: TObject);
 		procedure ActionSaveAsExecute(Sender: TObject);
 		procedure ActionSaveExecute(Sender: TObject);
 		procedure ActionSyntaxExecute(Sender: TObject);
@@ -283,6 +285,18 @@ begin
 	end
 	else
 		GlobalCalcState.Dirty := WasDirty;
+end;
+
+procedure TMainForm.ActionRenameExecute(Sender: TObject);
+var
+	CalcHandler: TCalcHandler;
+begin
+	for CalcHandler in GlobalCalcState.AllCalculators do begin
+		if TCalcView(CalcHandler.Frame).IsSelected then begin
+			TCalcView(CalcHandler.Frame).ActionRenameExecute(Sender);
+			break;
+		end;
+	end;
 end;
 
 procedure TMainForm.ActionSaveAsExecute(Sender: TObject);
