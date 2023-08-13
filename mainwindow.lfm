@@ -5,7 +5,7 @@ object MainForm: TMainForm
   Width = 429
   VertScrollBar.Increment = 60
   VertScrollBar.Tracking = True
-  BorderIcons = [biSystemMenu]
+  BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Calculator'
   ChildSizing.LeftRightSpacing = 8
