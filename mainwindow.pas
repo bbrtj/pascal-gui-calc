@@ -65,7 +65,7 @@ type
 		procedure LoadFromFile;
 		procedure SaveToFile;
 	public
-
+		procedure OpenFile(const Filename: String);
 
 	end;
 
@@ -96,16 +96,16 @@ var
 begin
 	CalcHandlerObj := CalcHandler as TCalcHandler;
 	self.RemoveControl(CalcHandlerObj.Frame);
-	CalcHandlerObj.Frame.Free;
 	GlobalCalcState.RemoveCalculator(CalcHandlerObj);
 	GlobalCalcState.Dirty := True;
 
+	CalcHandlerObj.Frame.Free;
 	self.DoOnResize;
 end;
 
 procedure TMainForm.AdjustPosition;
 const
-	cVisibleCalculators = 5;
+	cVisibleCalculators = 7;
 var
 	rect: TRect;
 	VisibleN, TotalN: Integer;
@@ -178,26 +178,53 @@ begin
 	self.DoOnResize;
 end;
 
+procedure TMainForm.OpenFile(const Filename: String);
+begin
+	try
+		GlobalCalcState.SavedAs := Filename;
+		self.ClearCalculators();
+		self.LoadFromFile();
+		GlobalCalcState.Dirty := False;
+	except
+		on E: Exception do begin
+			MessageDlg(
+				'File open error',
+				'Couldn''t open file ' + Filename + ': ' + E.Message,
+				mtError,
+				[mbOk],
+				0
+			);
+
+			GlobalCalcState.SavedAs := '';
+			self.AddCalculator();
+		end;
+	end;
+
+end;
+
 procedure TMainForm.LoadFromFile;
 var
 	FileContents: TStringList;
 	Line: String;
 	LineParts: TStringArray;
 begin
-	FileContents := TStringList.Create;
-	FileContents.LoadFromFile(GlobalCalcState.SavedAs);
+	try
+		FileContents := TStringList.Create;
+		FileContents.LoadFromFile(GlobalCalcState.SavedAs);
 
-	for Line in FileContents do begin
-		LineParts := SplitString(Line, ':');
-		if length(LineParts) <> 2 then
-			continue;
-		if length(LineParts[0]) = 0 then
-			continue;
+		for Line in FileContents do begin
+			LineParts := SplitString(Line, ':');
+			if length(LineParts) <> 2 then
+				continue;
+			if length(LineParts[0]) = 0 then
+				continue;
 
-		self.AddCalculator(LineParts[0], LineParts[1]);
+			self.AddCalculator(LineParts[0], LineParts[1]);
+		end;
+
+	finally
+		FileContents.Free;
 	end;
-
-	FileContents.Free;
 end;
 
 procedure TMainForm.SaveToFile;
@@ -279,9 +306,7 @@ begin
 	WasDirty := GlobalCalcState.Dirty;
 	if not self.CheckDirty() then exit;
 	if OpenDialog.Execute then begin
-		GlobalCalcState.SavedAs := OpenDialog.Filename;
-		self.ClearCalculators();
-		self.LoadFromFile();
+		OpenFile(OpenDialog.Filename);
 	end
 	else
 		GlobalCalcState.Dirty := WasDirty;

@@ -10,8 +10,9 @@ uses
 	athreads,
 	{$ENDIF}
 	Interfaces, // this includes the LCL widgetset
-	Forms, MainWindow
-	{ you can add units after this };
+	Forms, MainWindow,
+	{ you can add units after this }
+	SysUtils;
 
 {$R *.res}
 
@@ -20,6 +21,8 @@ begin
 	Application.Scaled:=True;
 	Application.Initialize;
 	Application.CreateForm(TMainForm, MainForm);
+	if ParamCount > 0 then
+		MainForm.OpenFile(ParamStr(1));
 	Application.Run;
 end.
 
