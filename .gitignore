@@ -1,5 +1,6 @@
 # Lazarus compiler-generated binaries (safe to delete)
 calc
+calc-x86_64-linux
 *.exe
 *.dll
 *.so
