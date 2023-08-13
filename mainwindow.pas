@@ -53,9 +53,12 @@ type
 		procedure ActionSyntaxExecute(Sender: TObject);
 		procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
 		procedure FormCreate(Sender: TObject);
-        procedure FormResize(Sender: TObject);
+		procedure FormResize(Sender: TObject);
 	private
+		FToRemove: TCalcHandler;
+
 		procedure AddCalculator(const CustomName: String = ''; const Content: String = '');
+		procedure DoRemoveCalculator(Arg: Int64);
 		procedure RemoveCalculator(CalcHandler: TObject);
         procedure AdjustPosition;
 		function CheckDirty: Boolean;
@@ -90,17 +93,22 @@ begin
 	self.DoOnResize;
 end;
 
-procedure TMainForm.RemoveCalculator(CalcHandler: TObject);
-var
-	CalcHandlerObj: TCalcHandler;
+procedure TMainForm.DoRemoveCalculator(Arg: Int64);
 begin
-	CalcHandlerObj := CalcHandler as TCalcHandler;
-	self.RemoveControl(CalcHandlerObj.Frame);
-	GlobalCalcState.RemoveCalculator(CalcHandlerObj);
-	GlobalCalcState.Dirty := True;
+	if FToRemove = nil then exit;
 
-	CalcHandlerObj.Frame.Free;
-	self.DoOnResize;
+   	self.RemoveControl(FToRemove.Frame);
+   	self.RemoveComponent(FToRemove.Frame);
+   	GlobalCalcState.RemoveCalculator(FToRemove).Free;
+   	GlobalCalcState.Dirty := True;
+
+   	self.DoOnResize;
+end;
+
+procedure TMainForm.RemoveCalculator(CalcHandler: TObject);
+begin
+	FToRemove := CalcHandler as TCalcHandler;
+	Application.QueueAsyncCall(@self.DoRemoveCalculator, 0);
 end;
 
 procedure TMainForm.AdjustPosition;
@@ -248,6 +256,7 @@ procedure TMainForm.FormCreate(Sender: TObject);
 begin
 	SaveDialog.InitialDir := GetUserDir;
 	OpenDialog.InitialDir := GetUserDir;
+	FToRemove := nil;
 	self.AddCalculator();
 end;
 
