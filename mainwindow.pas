@@ -56,6 +56,7 @@ type
 		procedure FormResize(Sender: TObject);
 	private
 		FToRemove: TCalcHandler;
+		FOriginalTitle: String;
 
 		procedure AddCalculator(const CustomName: String = ''; const Content: String = '');
 		procedure DoRemoveCalculator(Arg: Int64);
@@ -67,6 +68,10 @@ type
 
 		procedure LoadFromFile;
 		procedure SaveToFile;
+
+		procedure SetDirty(Value: Boolean);
+		procedure SetSavedAs(const Value: String);
+		procedure UpdateTitle();
 	public
 		procedure OpenFile(const Filename: String);
 
@@ -100,7 +105,7 @@ begin
    	self.RemoveControl(FToRemove.Frame);
    	self.RemoveComponent(FToRemove.Frame);
    	GlobalCalcState.RemoveCalculator(FToRemove).Free;
-   	GlobalCalcState.Dirty := True;
+   	self.SetDirty(True);
 
    	self.DoOnResize;
 end;
@@ -162,7 +167,7 @@ begin
 			mbCancel
 		) of
 			mrYes: ActionSave.Execute;
-			mrNo: GlobalCalcState.Dirty := False;
+			mrNo: self.SetDirty(False);
 			mrCancel: exit(False);
 		end;
 
@@ -188,10 +193,10 @@ end;
 procedure TMainForm.OpenFile(const Filename: String);
 begin
 	try
-		GlobalCalcState.SavedAs := Filename;
+		self.SetSavedAs(Filename);
 		self.ClearCalculators();
 		self.LoadFromFile();
-		GlobalCalcState.Dirty := False;
+		self.SetDirty(False);
 	except
 		on E: Exception do begin
 			MessageDlg(
@@ -202,7 +207,7 @@ begin
 				0
 			);
 
-			GlobalCalcState.SavedAs := '';
+			self.SetSavedAs('');
 			self.AddCalculator();
 		end;
 	end;
@@ -252,11 +257,44 @@ begin
 	FileContents.Free;
 end;
 
+procedure TMainForm.SetDirty(Value: Boolean);
+begin
+    GlobalCalcState.Dirty := Value;
+	self.UpdateTitle;
+end;
+
+procedure TMainForm.SetSavedAs(const Value: String);
+begin
+    GlobalCalcState.SavedAs := Value;
+	self.UpdateTitle;
+end;
+
+procedure TMainForm.UpdateTitle();
+var
+	TitleText: String;
+begin
+	TitleText := '';
+
+
+	TitleText += FOriginalTitle + ' - ';
+
+	if GlobalCalcState.SavedAs <> '' then
+		TitleText += GlobalCalcState.SavedAs
+	else
+		TitleText += 'Unnamed';
+
+	if GlobalCalcState.Dirty then
+		TitleText += ' ***';
+
+	self.Caption := TitleText;
+end;
+
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
 	SaveDialog.InitialDir := GetUserDir;
 	OpenDialog.InitialDir := GetUserDir;
 	FToRemove := nil;
+	FOriginalTitle := self.Caption;
 	self.AddCalculator();
 end;
 
@@ -268,7 +306,7 @@ end;
 procedure TMainForm.ActionNewCalculatorExecute(Sender: TObject);
 begin
 	self.AddCalculator();
-	GlobalCalcState.Dirty := True;
+	self.SetDirty(True);
 end;
 
 procedure TMainForm.ActionCalculateExecute(Sender: TObject);
@@ -304,7 +342,7 @@ begin
 
 	self.ClearCalculators();
 	self.AddCalculator();
-	GlobalCalcState.SavedAs := '';
+	self.SetSavedAs('');
 end;
 
 procedure TMainForm.ActionOpenExecute(Sender: TObject);
@@ -317,7 +355,7 @@ begin
 		OpenFile(OpenDialog.Filename);
 	end
 	else
-		GlobalCalcState.Dirty := WasDirty;
+		self.SetDirty(WasDirty);
 end;
 
 procedure TMainForm.ActionRenameExecute(Sender: TObject);
@@ -335,25 +373,25 @@ end;
 procedure TMainForm.ActionSaveAsExecute(Sender: TObject);
 begin
 	if SaveDialog.Execute then
-		GlobalCalcState.SavedAs := SaveDialog.Filename
+		self.SetSavedAs(SaveDialog.Filename)
 	else
 		exit;
 
 	self.SaveToFile;
-	GlobalCalcState.Dirty := False;
+	self.SetDirty(False);
 end;
 
 procedure TMainForm.ActionSaveExecute(Sender: TObject);
 begin
 	if GlobalCalcState.SavedAs = '' then begin
 		if SaveDialog.Execute then
-			GlobalCalcState.SavedAs := SaveDialog.Filename
+			self.SetSavedAs(SaveDialog.Filename)
 		else
 			exit;
 	end;
 
 	self.SaveToFile;
-	GlobalCalcState.Dirty := False;
+	self.SetDirty(False);
 end;
 
 procedure TMainForm.ActionSyntaxExecute(Sender: TObject);

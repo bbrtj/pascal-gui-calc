@@ -103,12 +103,12 @@ begin
 
 	self.Expression.Caption := NewName;
 	self.Handler.Name := NewName;
-	GlobalCalcState.Dirty := True;
+	(self.Owner as IFormWithCalculator).SetDirty(True);
 end;
 
 procedure TCalcView.CalcEditChange(Sender: TObject);
 begin
-	GlobalCalcState.Dirty := True;
+	(self.Owner as IFormWithCalculator).SetDirty(True);
 end;
 
 procedure TCalcView.FrameMouseWheel(Sender: TObject; Shift: TShiftState;
