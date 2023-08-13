@@ -6,7 +6,7 @@ interface
 
 uses
 	Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ActnList,
-	ExtCtrls, Menus, LCLIntf, StrUtils, Math, Types,
+	ExtCtrls, Menus, StrUtils, Math, Types,
 	CalcFrame, CalcState, CalcTypes, PNBase;
 
 type
@@ -107,7 +107,6 @@ procedure TMainForm.AdjustPosition;
 const
 	cVisibleCalculators = 7;
 var
-	rect: TRect;
 	VisibleN, TotalN: Integer;
 	VisibleHeight, TotalHeight: Integer;
 	TotalWidth: Integer;
@@ -137,8 +136,8 @@ begin
 		VisibleHeight := 80;
 	end;
 
-	GetWindowRect(self.Handle, rect);
-	self.SetBounds(rect.Left, rect.Top, TotalWidth, VisibleHeight);
+	self.Width := TotalWidth;
+	self.Height := VisibleHeight;
 	self.VertScrollBar.Page := VisibleHeight;
 	self.VertScrollBar.Range := TotalHeight;
 end;
