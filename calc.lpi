@@ -60,11 +60,11 @@
           </Linking>
         </CompilerOptions>
       </Item2>
-      <Item3 Name="Release">
+      <Item3 Name="Release FreeBSD">
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
-            <Filename Value="calc"/>
+            <Filename Value="calc-freebsd"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -73,6 +73,7 @@
           </SearchPaths>
           <CodeGeneration>
             <SmartLinkUnit Value="True"/>
+            <TargetOS Value="freebsd"/>
             <Optimizations>
               <OptimizationLevel Value="3"/>
             </Optimizations>
@@ -82,11 +83,6 @@
               <GenerateDebugInfo Value="False"/>
             </Debugging>
             <LinkSmart Value="True"/>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="True"/>
-              </Win32>
-            </Options>
           </Linking>
         </CompilerOptions>
       </Item3>
@@ -94,7 +90,7 @@
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
-            <Filename Value="calc"/>
+            <Filename Value="calc-win"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -120,7 +116,7 @@
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
-            <Filename Value="calc-x86_64-linux"/>
+            <Filename Value="calc-linux"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
