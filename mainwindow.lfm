@@ -20,6 +20,7 @@ object MainForm: TMainForm
   OnDropFiles = FormDropFiles
   OnResize = FormResize
   LCLVersion = '3.99.0.0'
+  Scaled = False
   object ActionShortcuts: TActionList
     Left = 142
     Top = 45
