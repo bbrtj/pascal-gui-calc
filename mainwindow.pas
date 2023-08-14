@@ -195,6 +195,9 @@ end;
 procedure TMainForm.OpenFile(const Filename: String);
 begin
 	try
+		if ExtractFileExt(Filename) <> '.calc' then
+			raise Exception.Create('invalid extension');
+
 		self.SetSavedAs(Filename);
 		self.ClearCalculators();
 		self.LoadFromFile();
@@ -210,6 +213,7 @@ begin
 			);
 
 			self.SetSavedAs('');
+			self.ClearCalculators();
 			self.AddCalculator();
 		end;
 	end;
