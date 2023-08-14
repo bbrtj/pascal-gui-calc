@@ -30,6 +30,7 @@ object CalcView: TCalcView
       Font.Height = -9
       ParentFont = False
       TabOrder = 0
+      TabStop = False
     end
     object PasteButton: TButton
       Left = 47
@@ -40,6 +41,7 @@ object CalcView: TCalcView
       Font.Height = -9
       ParentFont = False
       TabOrder = 1
+      TabStop = False
     end
     object CalcEdit: TEdit
       Left = 84
