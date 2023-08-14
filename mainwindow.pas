@@ -307,6 +307,8 @@ end;
 procedure TMainForm.FormDropFiles(Sender: TObject;
 	const FileNames: array of string);
 begin
+	if not self.CheckDirty() then exit;
+
 	if length(FileNames) > 0 then
 	    self.OpenFile(FileNames[0]);
 end;
