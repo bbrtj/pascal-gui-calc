@@ -5,6 +5,7 @@ object MainForm: TMainForm
   Width = 429
   VertScrollBar.Increment = 60
   VertScrollBar.Tracking = True
+  AllowDropFiles = True
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Calculator'
@@ -16,6 +17,7 @@ object MainForm: TMainForm
   Menu = MainMenu
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDropFiles = FormDropFiles
   OnResize = FormResize
   LCLVersion = '3.99.0.0'
   object ActionShortcuts: TActionList

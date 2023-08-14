@@ -53,6 +53,8 @@ type
 		procedure ActionSyntaxExecute(Sender: TObject);
 		procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
 		procedure FormCreate(Sender: TObject);
+		procedure FormDropFiles(Sender: TObject;
+			const FileNames: array of string);
 		procedure FormResize(Sender: TObject);
 	private
 		FToRemove: TCalcHandler;
@@ -296,6 +298,13 @@ begin
 	FToRemove := nil;
 	FOriginalTitle := self.Caption;
 	self.AddCalculator();
+end;
+
+procedure TMainForm.FormDropFiles(Sender: TObject;
+	const FileNames: array of string);
+begin
+	if length(FileNames) > 0 then
+	    self.OpenFile(FileNames[0]);
 end;
 
 procedure TMainForm.FormResize(Sender: TObject);
