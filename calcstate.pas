@@ -6,7 +6,7 @@ interface
 
 uses
 	Classes, SysUtils, Fgl, Controls, Math,
-	PN;
+	PN, PNBase;
 
 
 type
@@ -69,11 +69,15 @@ begin
 end;
 
 function TCalcHandler.Calculate(const vExpr: String): String;
+var
+	vFormat: TFormatSettings;
 begin
+	vFormat.DecimalSeparator := cDecimalSeparator;
+
 	FParser.ParseString(vExpr);
 	GlobalCalcState.SetVariablesAndConstants(FParser);
 	FCalculated := FParser.GetResult;
-	result := FloatToStr(FCalculated);
+	result := FloatToStr(FCalculated, vFormat);
 end;
 
 constructor TCalcState.Create();
