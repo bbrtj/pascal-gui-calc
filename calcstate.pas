@@ -17,10 +17,10 @@ type
 		FFrame: TControl;
 		FCalculated: Double;
 	public
-		constructor Create(const vName: String; vFrame: TControl);
+		constructor Create(const HandlerName: String; Frame: TControl);
 		destructor Destroy; override;
 
-		function Calculate(const vExpr: String): String;
+		function Calculate(const Expr: String): String;
 
 		property Name: ShortString read FName write FName;
 		property Frame: TControl read FFrame write FFrame;
@@ -39,10 +39,10 @@ type
 		constructor Create();
 		destructor Destroy; override;
 
-		function AddCalculator(const vName: String; vFrame: TControl): TCalcHandler;
-		function AddCalculator(const vCalc: TCalcHandler): TCalcHandler;
-		function RemoveCalculator(vCalc: TCalcHandler): TControl;
-		procedure SetVariablesAndConstants(vParser: TPN);
+		function AddCalculator(const HandlerName: String; Frame: TControl): TCalcHandler;
+		function AddCalculator(const Calc: TCalcHandler): TCalcHandler;
+		function RemoveCalculator(Calc: TCalcHandler): TControl;
+		procedure SetVariablesAndConstants(Parser: TPN);
 
 		property AllCalculators: TCalcHandlerList read FCalcs;
 		property Memory: String read FMemory write FMemory;
@@ -55,11 +55,11 @@ var
 
 implementation
 
-constructor TCalcHandler.Create(const vName: String; vFrame: TControl);
+constructor TCalcHandler.Create(const HandlerName: String; Frame: TControl);
 begin
 	FParser := TPN.Create;
-	FName := vName;
-	FFrame := vFrame;
+	FName := HandlerName;
+	FFrame := Frame;
 	FCalculated := 0;
 end;
 
@@ -68,16 +68,16 @@ begin
 	FParser.Free;
 end;
 
-function TCalcHandler.Calculate(const vExpr: String): String;
+function TCalcHandler.Calculate(const Expr: String): String;
 var
-	vFormat: TFormatSettings;
+	LFormat: TFormatSettings;
 begin
-	vFormat.DecimalSeparator := cDecimalSeparator;
+	LFormat.DecimalSeparator := cDecimalSeparator;
 
-	FParser.ParseString(vExpr);
+	FParser.ParseString(Expr);
 	GlobalCalcState.SetVariablesAndConstants(FParser);
 	FCalculated := FParser.GetResult;
-	result := FloatToStr(FCalculated, vFormat);
+	result := FloatToStr(FCalculated, LFormat);
 end;
 
 constructor TCalcState.Create();
@@ -94,35 +94,35 @@ begin
 	FCalcs.Free;
 end;
 
-function TCalcState.AddCalculator(const vName: String; vFrame: TControl): TCalcHandler;
+function TCalcState.AddCalculator(const HandlerName: String; Frame: TControl): TCalcHandler;
 begin
-	result := self.AddCalculator(TCalcHandler.Create(vName, vFrame));
+	result := self.AddCalculator(TCalcHandler.Create(HandlerName, Frame));
 end;
 
-function TCalcState.AddCalculator(const vCalc: TCalcHandler): TCalcHandler;
+function TCalcState.AddCalculator(const Calc: TCalcHandler): TCalcHandler;
 begin
-	result := vCalc;
+	result := Calc;
 	FCalcs.Add(result);
 end;
 
-function TCalcState.RemoveCalculator(vCalc: TCalcHandler): TControl;
+function TCalcState.RemoveCalculator(Calc: TCalcHandler): TControl;
 begin
-	result := vCalc.Frame;
-	FCalcs.Remove(vCalc);
+	result := Calc.Frame;
+	FCalcs.Remove(Calc);
 end;
 
-procedure TCalcState.SetVariablesAndConstants(vParser: TPN);
+procedure TCalcState.SetVariablesAndConstants(Parser: TPN);
 var
-	vCalc: TCalcHandler;
+	LCalc: TCalcHandler;
 begin
-	vParser.ClearVariables;
+	Parser.ClearVariables;
 
 	// constants
-	vParser.DefineVariable('PI', PI);
-	vParser.DefineVariable('PHI', (1 + 5 ** 0.5) / 2);
+	Parser.DefineVariable('PI', PI);
+	Parser.DefineVariable('PHI', (1 + 5 ** 0.5) / 2);
 
-	for vCalc in FCalcs do
-		vParser.DefineVariable(vCalc.Name, vCalc.LastCalculated);
+	for LCalc in FCalcs do
+		Parser.DefineVariable(LCalc.Name, LCalc.LastCalculated);
 end;
 
 initialization
