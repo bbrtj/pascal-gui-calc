@@ -1,14 +1,14 @@
 object CalcView: TCalcView
   Left = 0
-  Height = 103
+  Height = 718
   Top = 0
-  Width = 789
+  Width = 1316
   AutoSize = True
-  ClientHeight = 103
-  ClientWidth = 789
-  OnMouseWheel = FrameMouseWheel
+  ClientHeight = 718
+  ClientWidth = 1316
   ParentFont = False
   TabOrder = 0
+  OnMouseWheel = FrameMouseWheel
   DesignLeft = 720
   DesignTop = 30
   object Expression: TGroupBox
@@ -50,9 +50,9 @@ object CalcView: TCalcView
       Width = 418
       AutoSelect = False
       Font.Height = -16
-      OnChange = CalcEditChange
       ParentFont = False
       TabOrder = 2
+      OnChange = CalcEditChange
     end
     object CalcResultEdit: TEdit
       Left = 524
@@ -73,9 +73,9 @@ object CalcView: TCalcView
       AutoSize = False
       Caption = '='
       Font.Height = 22
+      OptimalFill = True
       ParentColor = False
       ParentFont = False
-      OptimalFill = True
     end
   end
   object CalcMenu: TPopupMenu
@@ -86,6 +86,9 @@ object CalcView: TCalcView
     end
     object MenuItemRename: TMenuItem
       Action = ActionRename
+    end
+    object MenuItemCopyText: TMenuItem
+      Action = ActionCopyText
     end
     object Separator1: TMenuItem
       Caption = '-'
@@ -99,13 +102,13 @@ object CalcView: TCalcView
     Top = 67
     object ActionCalculate: TAction
       Caption = 'Calculate'
-      OnExecute = ActionCalculateExecute
       ShortCut = 13
+      OnExecute = ActionCalculateExecute
     end
     object ActionRename: TAction
       Caption = 'Rename'
-      OnExecute = ActionRenameExecute
       ShortCut = 16466
+      OnExecute = ActionRenameExecute
     end
     object ActionRemove: TAction
       Caption = 'Remove'
@@ -118,6 +121,11 @@ object CalcView: TCalcView
     object ActionMemoryRead: TAction
       Caption = 'MR'
       OnExecute = ActionMemoryReadExecute
+    end
+    object ActionCopyText: TAction
+      Caption = 'Copy text to clipboard'
+      ShortCut = 24643
+      OnExecute = ActionCopyTextExecute
     end
   end
 end

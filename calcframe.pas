@@ -6,14 +6,15 @@ interface
 
 uses
 	Classes, SysUtils, Forms, Controls, StdCtrls,
-	Dialogs, Menus, Buttons, ActnList, Math, Types,
-	CalcState, CalcTypes, PNBase;
+	Dialogs, Menus, Buttons, ActnList, Clipbrd,
+	Math, Types, CalcState, CalcTypes, PNBase;
 
 type
 
 	{ TCalcView }
 
  TCalcView = class(TFrame)
+		ActionCopyText: TAction;
 		ActionCalculate: TAction;
 		ActionRename: TAction;
 		ActionRemove: TAction;
@@ -26,12 +27,14 @@ type
 		CopyButton: TButton;
 		Expression: TGroupBox;
 		LabelEquals: TLabel;
+		MenuItemCopyText: TMenuItem;
 		MenuItemCalculate: TMenuItem;
 		MenuItemRemove: TMenuItem;
 		MenuItemRename: TMenuItem;
 		PasteButton: TButton;
 		CalcMenu: TPopupMenu;
 		Separator1: TMenuItem;
+		procedure ActionCopyTextExecute(Sender: TObject);
 		procedure ActionCalculateExecute(Sender: TObject);
 		procedure ActionMemoryReadExecute(Sender: TObject);
 		procedure ActionMemoryStoreExecute(Sender: TObject);
@@ -74,6 +77,17 @@ end;
 procedure TCalcView.ActionCalculateExecute(Sender: TObject);
 begin
 	Calculate;
+end;
+
+procedure TCalcView.ActionCopyTextExecute(Sender: TObject);
+begin
+	Clipboard.AsText :=
+		self.Handler.Name
+		+ ': '
+		+ CalcEdit.Text
+		+ ' = '
+		+ CalcResultEdit.Text
+		;
 end;
 
 procedure TCalcView.ActionMemoryReadExecute(Sender: TObject);

@@ -14,6 +14,7 @@ type
 	{ TMainForm }
 
  TMainForm = class(TForm, IFormWithCalculator)
+		ActionCopyText: TAction;
 		ActionRename: TAction;
 		ActionSyntax: TAction;
 		ActionSaveAs: TAction;
@@ -42,6 +43,7 @@ type
 		Separator1: TMenuItem;
 		Separator2: TMenuItem;
 		procedure ActionCalculateExecute(Sender: TObject);
+		procedure ActionCopyTextExecute(Sender: TObject);
   		procedure ActionNewCalculatorExecute(Sender: TObject);
 		procedure ActionCalculateAllExecute(Sender: TObject);
 		procedure ActionExitProgramExecute(Sender: TObject);
@@ -331,6 +333,18 @@ begin
 	for CalcHandler in GlobalCalcState.AllCalculators do begin
 		if TCalcView(CalcHandler.Frame).IsSelected then begin
 			TCalcView(CalcHandler.Frame).Calculate;
+			break;
+		end;
+	end;
+end;
+
+procedure TMainForm.ActionCopyTextExecute(Sender: TObject);
+var
+	CalcHandler: TCalcHandler;
+begin
+	for CalcHandler in GlobalCalcState.AllCalculators do begin
+		if TCalcView(CalcHandler.Frame).IsSelected then begin
+			TCalcView(CalcHandler.Frame).ActionCopyTextExecute(Sender);
 			break;
 		end;
 	end;
