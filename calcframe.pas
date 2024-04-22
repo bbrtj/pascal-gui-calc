@@ -80,14 +80,21 @@ begin
 end;
 
 procedure TCalcView.ActionCopyTextExecute(Sender: TObject);
+var
+	CalcLeft, CalcRight: String;
 begin
-	Clipboard.AsText :=
-		self.Handler.Name
-		+ ': '
-		+ CalcEdit.Text
-		+ ' = '
-		+ CalcResultEdit.Text
-		;
+	CalcLeft := Trim(CalcEdit.Text);
+	CalcRight := Trim(CalcResultEdit.Text);
+
+	Clipboard.AsText := '';
+	if not self.Handler.DefaultName then begin
+		if CalcLeft = CalcRight then
+			Clipboard.AsText :=	self.Handler.Name + ' = ' + CalcLeft
+		else
+			Clipboard.AsText :=	self.Handler.Name + ': ' + CalcLeft + ' = ' + CalcRight;
+	end
+	else
+		Clipboard.AsText :=	CalcLeft + ' = ' + CalcRight;
 end;
 
 procedure TCalcView.ActionMemoryReadExecute(Sender: TObject);

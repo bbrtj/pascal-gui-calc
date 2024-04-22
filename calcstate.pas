@@ -13,16 +13,21 @@ type
 	TCalcHandler = class
 	private
 		FName: ShortString;
+		FRenamed: Boolean;
 		FParser: TPN;
 		FFrame: TControl;
 		FCalculated: Double;
+
+		procedure SetName(NewName: ShortString);
+		function IsNameDefault(): Boolean;
 	public
 		constructor Create(const HandlerName: String; Frame: TControl);
 		destructor Destroy; override;
 
 		function Calculate(const Expr: String): String;
 
-		property Name: ShortString read FName write FName;
+		property Name: ShortString read FName write SetName;
+		property DefaultName: Boolean read IsNameDefault;
 		property Frame: TControl read FFrame write FFrame;
 		property LastCalculated: Double read FCalculated;
 	end;
@@ -59,6 +64,7 @@ constructor TCalcHandler.Create(const HandlerName: String; Frame: TControl);
 begin
 	FParser := TPN.Create;
 	FName := HandlerName;
+	FRenamed := false;
 	FFrame := Frame;
 	FCalculated := 0;
 end;
@@ -67,6 +73,18 @@ destructor TCalcHandler.Destroy;
 begin
 	FParser.Free;
 end;
+
+procedure TCalcHandler.SetName(NewName: ShortString);
+begin
+	FName := NewName;
+	FRenamed := true;
+end;
+
+function TCalcHandler.IsNameDefault(): Boolean;
+begin
+	result := not FRenamed;
+end;
+
 
 function TCalcHandler.Calculate(const Expr: String): String;
 var
