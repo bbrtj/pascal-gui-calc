@@ -13,6 +13,7 @@ type
 		procedure SetDirty(Value: Boolean);
 		procedure AddCalculator(const CustomName: String = ''; const Content: String = '');
 		procedure RemoveCalculator(CalcHandler: TObject);
+        procedure RenameCalculator(const OldName, NewName: String);
 	end;
 
 implementation

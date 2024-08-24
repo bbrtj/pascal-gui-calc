@@ -5,7 +5,7 @@ unit CalcState;
 interface
 
 uses
-	Classes, SysUtils, Fgl, Controls, Math,
+	Classes, SysUtils, StrUtils, Fgl, Controls, Math,
 	PN, PNBase;
 
 
@@ -20,11 +20,13 @@ type
 
 		procedure SetName(NewName: ShortString);
 		function IsNameDefault(): Boolean;
+        function FindVariableOccurrence(const Expr, Name: String): Integer;
 	public
 		constructor Create(const HandlerName: String; Frame: TControl);
 		destructor Destroy; override;
 
 		function Calculate(const Expr: String): String;
+        function RenameVariable(const Expr, OldName, NewName: String): String;
 
 		property Name: ShortString read FName write SetName;
 		property DefaultName: Boolean read IsNameDefault;
@@ -59,6 +61,8 @@ var
 	GlobalCalcState: TCalcState;
 
 implementation
+
+uses CalcFrame;
 
 constructor TCalcHandler.Create(const HandlerName: String; Frame: TControl);
 begin
@@ -98,6 +102,32 @@ begin
 	result := FloatToStr(FCalculated, LFormat);
 end;
 
+function TCalcHandler.RenameVariable(const Expr, OldName, NewName: String): String;
+var
+    FoundPosition: Integer;
+begin
+    result := Expr;
+    while True do begin
+    	FoundPosition := self.FindVariableOccurrence(result, OldName);
+        if FoundPosition < 1 then break;
+		result := StuffString(result, FoundPosition, Length(OldName), NewName);
+	end;
+end;
+
+function TCalcHandler.FindVariableOccurrence(const Expr, Name: String): Integer;
+var
+    CurrentItem: TItem;
+begin
+    FParser.ParseString(Expr);
+
+    while not FParser.Stack.Empty() do begin
+		CurrentItem := FParser.Stack.Pop();
+		if CurrentItem.ItemType <> itVariable then continue;
+		if CurrentItem.VariableName = Name then exit(CurrentItem.ParsedAt);
+	end;
+
+	result := 0;
+end;
 constructor TCalcState.Create();
 begin
 	FCalcs := TCalcHandlerList.Create;
