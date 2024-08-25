@@ -5,15 +5,15 @@ unit CalcFrame;
 interface
 
 uses
-	Classes, SysUtils, Forms, Controls, StdCtrls,
+	SysUtils, Classes, Math, Forms, Controls, StdCtrls,
 	Dialogs, Menus, Buttons, ActnList, Clipbrd,
-	Math, Types, CalcState, CalcTypes, PNBase;
+	CalcState, CalcTypes, PNBase;
 
 type
 
 	{ TCalcView }
 
- TCalcView = class(TFrame)
+ 	TCalcView = class(TFrame)
 		ActionCopyText: TAction;
 		ActionCalculate: TAction;
 		ActionRename: TAction;
@@ -114,16 +114,19 @@ end;
 
 procedure TCalcView.ActionRenameExecute(Sender: TObject);
 var
+    OldName: String;
 	NewName: String;
 begin
+    OldName := self.Handler.Name;
 	NewName := InputBox(
 		'Rename calculator',
 		'Enter new name for the calculator',
-		self.Handler.Name
+		OldName
 	);
 
 	self.Expression.Caption := NewName;
 	self.Handler.Name := NewName;
+    (self.Owner as IFormWithCalculator).RenameCalculator(OldName, NewName);
 	(self.Owner as IFormWithCalculator).SetDirty(True);
 end;
 

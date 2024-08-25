@@ -65,6 +65,7 @@ type
 		procedure AddCalculator(const CustomName: String = ''; const Content: String = '');
 		procedure DoRemoveCalculator(Arg: Int64);
 		procedure RemoveCalculator(CalcHandler: TObject);
+        procedure RenameCalculator(const OldName, NewName: String);
         procedure AdjustPosition;
 		function CheckDirty: Boolean;
 
@@ -118,6 +119,23 @@ procedure TMainForm.RemoveCalculator(CalcHandler: TObject);
 begin
 	FToRemove := CalcHandler as TCalcHandler;
 	Application.QueueAsyncCall(@self.DoRemoveCalculator, 0);
+end;
+
+procedure TMainForm.RenameCalculator(const OldName, NewName: String);
+var
+    CalcHandler: TCalcHandler;
+    Calculator: TCalcView;
+    NewContent: String;
+begin
+	 for CalcHandler in GlobalCalcState.AllCalculators do begin
+         try
+			Calculator := CalcHandler.Frame as TCalcView;
+			NewContent := CalcHandler.RenameVariable(Calculator.GetContent(), OldName, NewName);
+			Calculator.SetContent(NewContent);
+         except
+             continue;
+		 end;
+	 end;
 end;
 
 procedure TMainForm.AdjustPosition;
