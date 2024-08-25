@@ -44,7 +44,7 @@ type
 		Separator2: TMenuItem;
 		procedure ActionCalculateExecute(Sender: TObject);
 		procedure ActionCopyTextExecute(Sender: TObject);
-  		procedure ActionNewCalculatorExecute(Sender: TObject);
+		procedure ActionNewCalculatorExecute(Sender: TObject);
 		procedure ActionCalculateAllExecute(Sender: TObject);
 		procedure ActionExitProgramExecute(Sender: TObject);
 		procedure ActionNewExecute(Sender: TObject);
@@ -55,8 +55,7 @@ type
 		procedure ActionSyntaxExecute(Sender: TObject);
 		procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
 		procedure FormCreate(Sender: TObject);
-		procedure FormDropFiles(Sender: TObject;
-			const FileNames: array of string);
+		procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
 		procedure FormResize(Sender: TObject);
 	private
 		FToRemove: TCalcHandler;
@@ -65,8 +64,8 @@ type
 		procedure AddCalculator(const CustomName: String = ''; const Content: String = '');
 		procedure DoRemoveCalculator(Arg: Int64);
 		procedure RemoveCalculator(CalcHandler: TObject);
-        procedure RenameCalculator(const OldName, NewName: String);
-        procedure AdjustPosition;
+		procedure RenameCalculator(const OldName, NewName: String);
+		procedure AdjustPosition;
 		function CheckDirty: Boolean;
 
 		procedure ClearCalculators();
@@ -107,12 +106,12 @@ procedure TMainForm.DoRemoveCalculator(Arg: Int64);
 begin
 	if FToRemove = nil then exit;
 
-   	self.RemoveControl(FToRemove.Frame);
-   	self.RemoveComponent(FToRemove.Frame);
-   	GlobalCalcState.RemoveCalculator(FToRemove).Free;
-   	self.SetDirty(True);
+	self.RemoveControl(FToRemove.Frame);
+	self.RemoveComponent(FToRemove.Frame);
+	GlobalCalcState.RemoveCalculator(FToRemove).Free;
+	self.SetDirty(True);
 
-   	self.DoOnResize;
+	self.DoOnResize;
 end;
 
 procedure TMainForm.RemoveCalculator(CalcHandler: TObject);
@@ -123,19 +122,19 @@ end;
 
 procedure TMainForm.RenameCalculator(const OldName, NewName: String);
 var
-    CalcHandler: TCalcHandler;
-    Calculator: TCalcView;
-    NewContent: String;
+	CalcHandler: TCalcHandler;
+	Calculator: TCalcView;
+	NewContent: String;
 begin
-	 for CalcHandler in GlobalCalcState.AllCalculators do begin
-         try
-			Calculator := CalcHandler.Frame as TCalcView;
-			NewContent := CalcHandler.RenameVariable(Calculator.GetContent(), OldName, NewName);
-			Calculator.SetContent(NewContent);
-         except
-             continue;
-		 end;
-	 end;
+	for CalcHandler in GlobalCalcState.AllCalculators do begin
+		try
+				Calculator := CalcHandler.Frame as TCalcView;
+				NewContent := CalcHandler.RenameVariable(Calculator.GetContent(), OldName, NewName);
+				Calculator.SetContent(NewContent);
+		except
+			continue;
+		end;
+	end;
 end;
 
 procedure TMainForm.AdjustPosition;
@@ -145,7 +144,7 @@ var
 	VisibleN, TotalN: Integer;
 	VisibleHeight, TotalHeight: Integer;
 	TotalWidth: Integer;
-    Ind: Integer;
+	Ind: Integer;
 begin
 	TotalN := self.ControlCount - 1;
 	if TotalN >= 0 then begin
@@ -163,7 +162,7 @@ begin
 		end;
 
 		TotalWidth += self.ChildSizing.LeftRightSpacing * 2;
-    end
+	end
 	else begin
 		// some defaults
 		TotalWidth := 500;
@@ -285,13 +284,13 @@ end;
 
 procedure TMainForm.SetDirty(Value: Boolean);
 begin
-    GlobalCalcState.Dirty := Value;
+	GlobalCalcState.Dirty := Value;
 	self.UpdateTitle;
 end;
 
 procedure TMainForm.SetSavedAs(const Value: String);
 begin
-    GlobalCalcState.SavedAs := Value;
+	GlobalCalcState.SavedAs := Value;
 	self.UpdateTitle;
 end;
 
@@ -324,13 +323,12 @@ begin
 	self.AddCalculator();
 end;
 
-procedure TMainForm.FormDropFiles(Sender: TObject;
-	const FileNames: array of string);
+procedure TMainForm.FormDropFiles(Sender: TObject; const FileNames: array of string);
 begin
 	if not self.CheckDirty() then exit;
 
 	if length(FileNames) > 0 then
-	    self.OpenFile(FileNames[0]);
+		self.OpenFile(FileNames[0]);
 end;
 
 procedure TMainForm.FormResize(Sender: TObject);

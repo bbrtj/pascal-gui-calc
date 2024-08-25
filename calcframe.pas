@@ -67,7 +67,7 @@ implementation
 { TCalcView }
 
 var
-   LastView: Cardinal;
+	LastView: Cardinal;
 
 procedure ResetNumbers;
 begin
@@ -114,10 +114,10 @@ end;
 
 procedure TCalcView.ActionRenameExecute(Sender: TObject);
 var
-    OldName: String;
+	OldName: String;
 	NewName: String;
 begin
-    OldName := self.Handler.Name;
+	OldName := self.Handler.Name;
 	NewName := InputBox(
 		'Rename calculator',
 		'Enter new name for the calculator',
@@ -126,7 +126,7 @@ begin
 
 	self.Expression.Caption := NewName;
 	self.Handler.Name := NewName;
-    (self.Owner as IFormWithCalculator).RenameCalculator(OldName, NewName);
+	(self.Owner as IFormWithCalculator).RenameCalculator(OldName, NewName);
 	(self.Owner as IFormWithCalculator).SetDirty(True);
 end;
 
@@ -141,7 +141,7 @@ var
 	ParentScroll: TControlScrollBar;
 begin
 	ParentScroll := (self.Parent as TScrollingWinControl).VertScrollBar;
-    ParentScroll.Position := ParentScroll.Position - Sign(WheelDelta) * ParentScroll.Increment;
+	ParentScroll.Position := ParentScroll.Position - Sign(WheelDelta) * ParentScroll.Increment;
 	Handled := True;
 end;
 
