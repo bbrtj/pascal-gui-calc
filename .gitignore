@@ -1,7 +1,7 @@
 # Lazarus compiler-generated binaries (safe to delete)
 calc
-calc-freebsd
-calc-linux
+calc-freebsd*
+calc-linux*
 *.exe
 *.dll
 *.so
