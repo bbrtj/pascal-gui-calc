@@ -6,10 +6,12 @@ interface
 
 uses
 	Classes, SysUtils, StrUtils, Fgl, Controls, Math,
-	PN, PNBase;
-
+	PN, PNBase,
+	CalcFormatters;
 
 type
+	TResultFormat = (rfDecimal, rfHexadecimal, rfScientific);
+
 	TCalcHandler = class
 	private
 		FName: ShortString;
@@ -17,6 +19,7 @@ type
 		FParser: TPN;
 		FFrame: TControl;
 		FCalculated: Double;
+		FResultFormat: TResultFormat;
 
 		procedure SetName(NewName: ShortString);
 		function IsNameDefault(): Boolean;
@@ -25,13 +28,15 @@ type
 		constructor Create(const HandlerName: String; Frame: TControl);
 		destructor Destroy; override;
 
-		function Calculate(const Expr: String): String;
+		procedure Calculate(const Expr: String);
+		function GetFormatted(): String;
 		function RenameVariable(const Expr, OldName, NewName: String): String;
 
 		property Name: ShortString read FName write SetName;
 		property DefaultName: Boolean read IsNameDefault;
 		property Frame: TControl read FFrame write FFrame;
 		property LastCalculated: Double read FCalculated;
+		property ResultFormat: TResultFormat read FResultFormat write FResultFormat;
 	end;
 
 	TCalcHandlerList = specialize TFPGObjectList<TCalcHandler>;
@@ -39,7 +44,6 @@ type
 	TCalcState = class
 	private
 		FCalcs: TCalcHandlerList;
-		FMemory: String;
 		FDirty: Boolean;
 		FSavedAs: String;
 	public
@@ -52,7 +56,6 @@ type
 		procedure SetVariablesAndConstants(Parser: TPN);
 
 		property AllCalculators: TCalcHandlerList read FCalcs;
-		property Memory: String read FMemory write FMemory;
 		property Dirty: Boolean read FDirty write FDirty;
 		property SavedAs: String read FSavedAs write FSavedAs;
 	end;
@@ -90,16 +93,23 @@ begin
 end;
 
 
-function TCalcHandler.Calculate(const Expr: String): String;
+procedure TCalcHandler.Calculate(const Expr: String);
+begin
+	FParser.ParseString(Expr);
+	GlobalCalcState.SetVariablesAndConstants(FParser);
+	FCalculated := FParser.GetResult;
+end;
+
+function TCalcHandler.GetFormatted(): String;
 var
 	LFormat: TFormatSettings;
 begin
 	LFormat.DecimalSeparator := cDecimalSeparator;
-
-	FParser.ParseString(Expr);
-	GlobalCalcState.SetVariablesAndConstants(FParser);
-	FCalculated := FParser.GetResult;
-	result := FloatToStr(FCalculated, LFormat);
+	case FResultFormat of
+		rfDecimal: result := FloatToStr(FCalculated, LFormat);
+		rfHexadecimal: result := FloatToHex(FCalculated, LFormat);
+		rfScientific: result := FloatToStrF(FCalculated, ffExponent, 15, 1, LFormat);
+	end;
 end;
 
 function TCalcHandler.RenameVariable(const Expr, OldName, NewName: String): String;
@@ -132,7 +142,6 @@ constructor TCalcState.Create();
 begin
 	FCalcs := TCalcHandlerList.Create;
 
-	FMemory := '';
 	FDirty := False;
 	FSavedAs := '';
 end;

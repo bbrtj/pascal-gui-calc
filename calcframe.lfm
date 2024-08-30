@@ -15,54 +15,32 @@ object CalcView: TCalcView
     Left = 0
     Height = 66
     Top = 0
-    Width = 731
+    Width = 760
     Caption = 'expr'
     ClientHeight = 42
-    ClientWidth = 725
+    ClientWidth = 754
     PopupMenu = CalcMenu
     TabOrder = 0
-    object CopyButton: TButton
-      Left = 8
-      Height = 25
-      Top = 7
-      Width = 31
-      Action = ActionMemoryStore
-      Font.Height = -9
-      ParentFont = False
-      TabOrder = 0
-      TabStop = False
-    end
-    object PasteButton: TButton
-      Left = 47
-      Height = 25
-      Top = 7
-      Width = 31
-      Action = ActionMemoryRead
-      Font.Height = -9
-      ParentFont = False
-      TabOrder = 1
-      TabStop = False
-    end
     object CalcEdit: TEdit
-      Left = 84
+      Left = 40
       Height = 27
       Top = 7
-      Width = 418
+      Width = 462
       AutoSelect = False
       Font.Height = -16
       ParentFont = False
-      TabOrder = 2
+      TabOrder = 0
       OnChange = CalcEditChange
     end
     object CalcResultEdit: TEdit
       Left = 524
       Height = 27
       Top = 7
-      Width = 192
+      Width = 228
       Font.Height = -16
       ParentFont = False
       ReadOnly = True
-      TabOrder = 3
+      TabOrder = 1
     end
     object LabelEquals: TLabel
       Left = 501
@@ -77,15 +55,48 @@ object CalcView: TCalcView
       ParentColor = False
       ParentFont = False
     end
+    object MenuButton: TButton
+      Left = 8
+      Height = 25
+      Top = 7
+      Width = 27
+      Caption = '≡'
+      Font.CharSet = 4
+      ParentFont = False
+      TabOrder = 2
+      OnClick = MenuButtonClick
+    end
   end
   object CalcMenu: TPopupMenu
-    Left = 261
+    Left = 200
     Top = 67
     object MenuItemCalculate: TMenuItem
       Action = ActionCalculate
     end
     object MenuItemRename: TMenuItem
       Action = ActionRename
+    end
+    object MenuItemResultFormat: TMenuItem
+      Caption = 'Result format'
+      object MenuItemResultFormatDecimal: TMenuItem
+        Action = ActionFormatDecimal
+        AutoCheck = True
+        Checked = True
+        GroupIndex = 1
+        RadioItem = True
+      end
+      object MenuItemResultFormatHex: TMenuItem
+        Action = ActionFormatHexadecimal
+        AutoCheck = True
+        GroupIndex = 1
+        RadioItem = True
+      end
+      object MenuItemResultFormatScientific: TMenuItem
+        Action = ActionFormatScientific
+        AutoCheck = True
+        GroupIndex = 1
+        RadioItem = True
+      end
     end
     object MenuItemCopyText: TMenuItem
       Action = ActionCopyText
@@ -114,18 +125,22 @@ object CalcView: TCalcView
       Caption = 'Remove'
       OnExecute = ActionRemoveExecute
     end
-    object ActionMemoryStore: TAction
-      Caption = 'MS'
-      OnExecute = ActionMemoryStoreExecute
-    end
-    object ActionMemoryRead: TAction
-      Caption = 'MR'
-      OnExecute = ActionMemoryReadExecute
-    end
     object ActionCopyText: TAction
       Caption = 'Copy text to clipboard'
       ShortCut = 24643
       OnExecute = ActionCopyTextExecute
+    end
+    object ActionFormatDecimal: TAction
+      Caption = 'Decimal'
+      OnExecute = ActionFormatDecimalExecute
+    end
+    object ActionFormatHexadecimal: TAction
+      Caption = 'Hexadecimal'
+      OnExecute = ActionFormatHexadecimalExecute
+    end
+    object ActionFormatScientific: TAction
+      Caption = 'Scientific'
+      OnExecute = ActionFormatScientificExecute
     end
   end
 end

@@ -1,6 +1,7 @@
 unit CalcTypes;
 
 {$mode ObjFPC}{$H+}
+{$interfaces corba}
 
 interface
 

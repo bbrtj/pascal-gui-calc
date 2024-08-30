@@ -14,32 +14,38 @@ type
 	{ TCalcView }
 
  	TCalcView = class(TFrame)
+		ActionFormatDecimal: TAction;
+		ActionFormatHexadecimal: TAction;
+		ActionFormatScientific: TAction;
 		ActionCopyText: TAction;
 		ActionCalculate: TAction;
 		ActionRename: TAction;
 		ActionRemove: TAction;
-		ActionMemoryStore: TAction;
-		ActionMemoryRead: TAction;
+		MenuButton: TButton;
 		CalculatorActions: TActionList;
 		CalcButton: TButton;
 		CalcEdit: TEdit;
 		CalcResultEdit: TEdit;
-		CopyButton: TButton;
 		Expression: TGroupBox;
 		LabelEquals: TLabel;
+		MenuItemResultFormat: TMenuItem;
+		MenuItemResultFormatDecimal: TMenuItem;
+		MenuItemResultFormatHex: TMenuItem;
+		MenuItemResultFormatScientific: TMenuItem;
 		MenuItemCopyText: TMenuItem;
 		MenuItemCalculate: TMenuItem;
 		MenuItemRemove: TMenuItem;
 		MenuItemRename: TMenuItem;
-		PasteButton: TButton;
 		CalcMenu: TPopupMenu;
 		Separator1: TMenuItem;
 		procedure ActionCopyTextExecute(Sender: TObject);
 		procedure ActionCalculateExecute(Sender: TObject);
-		procedure ActionMemoryReadExecute(Sender: TObject);
-		procedure ActionMemoryStoreExecute(Sender: TObject);
+		procedure ActionFormatDecimalExecute(Sender: TObject);
+		procedure ActionFormatHexadecimalExecute(Sender: TObject);
+		procedure ActionFormatScientificExecute(Sender: TObject);
 		procedure ActionRemoveExecute(Sender: TObject);
 		procedure ActionRenameExecute(Sender: TObject);
+		procedure MenuButtonClick(Sender: TObject);
 		procedure CalcEditChange(Sender: TObject);
 		procedure FrameMouseWheel(Sender: TObject; Shift: TShiftState;
 			WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
@@ -53,6 +59,7 @@ type
 		function IsSelected(): Boolean;
 		procedure SetContent(const Content: String);
 		function GetContent(): String;
+		procedure WriteResult();
 
 		property Content: String read GetContent write SetContent;
 		property Handler: TCalcHandler read FHandler write FHandler;
@@ -79,6 +86,24 @@ begin
 	Calculate;
 end;
 
+procedure TCalcView.ActionFormatDecimalExecute(Sender: TObject);
+begin
+	FHandler.ResultFormat := rfDecimal;
+	self.WriteResult();
+end;
+
+procedure TCalcView.ActionFormatHexadecimalExecute(Sender: TObject);
+begin
+	FHandler.ResultFormat := rfHexadecimal;
+	self.WriteResult();
+end;
+
+procedure TCalcView.ActionFormatScientificExecute(Sender: TObject);
+begin
+	FHandler.ResultFormat := rfScientific;
+	self.WriteResult();
+end;
+
 procedure TCalcView.ActionCopyTextExecute(Sender: TObject);
 var
 	CalcLeft, CalcRight: String;
@@ -95,16 +120,6 @@ begin
 	end
 	else
 		Clipboard.AsText :=	CalcLeft + ' = ' + CalcRight;
-end;
-
-procedure TCalcView.ActionMemoryReadExecute(Sender: TObject);
-begin
-	CalcEdit.Text := GlobalCalcState.Memory;
-end;
-
-procedure TCalcView.ActionMemoryStoreExecute(Sender: TObject);
-begin
-	GlobalCalcState.Memory := CalcEdit.Text;
 end;
 
 procedure TCalcView.ActionRemoveExecute(Sender: TObject);
@@ -128,6 +143,11 @@ begin
 	self.Handler.Name := NewName;
 	(self.Owner as IFormWithCalculator).RenameCalculator(OldName, NewName);
 	(self.Owner as IFormWithCalculator).SetDirty(True);
+end;
+
+procedure TCalcView.MenuButtonClick(Sender: TObject);
+begin
+	CalcMenu.PopUp();
 end;
 
 procedure TCalcView.CalcEditChange(Sender: TObject);
@@ -177,7 +197,8 @@ begin
 	if CalcEdit.Text <> '' then begin
 		result := False;
 		try
-			CalcResultEdit.Text := FHandler.Calculate(CalcEdit.Text);
+			FHandler.Calculate(CalcEdit.Text);
+			self.WriteResult();
 			result := True;
 		except
 			on E: EParsingFailed do ShowCalcError('Parsing', E.Message);
@@ -200,6 +221,11 @@ end;
 function TCalcView.GetContent: String;
 begin
 	result := CalcEdit.Text;
+end;
+
+procedure TCalcView.WriteResult();
+begin
+	CalcResultEdit.Text := FHandler.GetFormatted();
 end;
 
 initialization
