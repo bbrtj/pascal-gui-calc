@@ -14,6 +14,8 @@ type
 	{ TCalcView }
 
  	TCalcView = class(TFrame)
+		ActionFormatBinary: TAction;
+		ActionFormatOctal: TAction;
 		ActionFormatDecimal: TAction;
 		ActionFormatHexadecimal: TAction;
 		ActionFormatScientific: TAction;
@@ -28,6 +30,8 @@ type
 		CalcResultEdit: TEdit;
 		Expression: TGroupBox;
 		LabelEquals: TLabel;
+		MenuItemResultFormatBinary: TMenuItem;
+		MenuItemResultFormatOctal: TMenuItem;
 		MenuItemResultFormat: TMenuItem;
 		MenuItemResultFormatDecimal: TMenuItem;
 		MenuItemResultFormatHex: TMenuItem;
@@ -40,8 +44,10 @@ type
 		Separator1: TMenuItem;
 		procedure ActionCopyTextExecute(Sender: TObject);
 		procedure ActionCalculateExecute(Sender: TObject);
+		procedure ActionFormatBinaryExecute(Sender: TObject);
 		procedure ActionFormatDecimalExecute(Sender: TObject);
 		procedure ActionFormatHexadecimalExecute(Sender: TObject);
+		procedure ActionFormatOctalExecute(Sender: TObject);
 		procedure ActionFormatScientificExecute(Sender: TObject);
 		procedure ActionRemoveExecute(Sender: TObject);
 		procedure ActionRenameExecute(Sender: TObject);
@@ -86,6 +92,12 @@ begin
 	Calculate;
 end;
 
+procedure TCalcView.ActionFormatBinaryExecute(Sender: TObject);
+begin
+	FHandler.ResultFormat := rfBinary;
+	self.WriteResult();
+end;
+
 procedure TCalcView.ActionFormatDecimalExecute(Sender: TObject);
 begin
 	FHandler.ResultFormat := rfDecimal;
@@ -95,6 +107,12 @@ end;
 procedure TCalcView.ActionFormatHexadecimalExecute(Sender: TObject);
 begin
 	FHandler.ResultFormat := rfHexadecimal;
+	self.WriteResult();
+end;
+
+procedure TCalcView.ActionFormatOctalExecute(Sender: TObject);
+begin
+	FHandler.ResultFormat := rfOctal;
 	self.WriteResult();
 end;
 

@@ -10,7 +10,7 @@ uses
 	CalcFormatters;
 
 type
-	TResultFormat = (rfDecimal, rfHexadecimal, rfScientific);
+	TResultFormat = (rfDecimal, rfBinary, rfOctal, rfHexadecimal, rfScientific);
 
 	TCalcHandler = class
 	private
@@ -107,7 +107,21 @@ begin
 	LFormat.DecimalSeparator := cDecimalSeparator;
 	case FResultFormat of
 		rfDecimal: result := FloatToStr(FCalculated, LFormat);
-		rfHexadecimal: result := FloatToHex(FCalculated, LFormat);
+		rfBinary: begin
+			LFormat.CurrencyString := '0b';
+			LFormat.CurrencyFormat := 2;
+			result := FloatToBase(FCalculated, LFormat);
+		end;
+		rfOctal: begin
+			LFormat.CurrencyString := '0o';
+			LFormat.CurrencyFormat := 8;
+			result := FloatToBase(FCalculated, LFormat);
+		end;
+		rfHexadecimal: begin
+			LFormat.CurrencyString := '0x';
+			LFormat.CurrencyFormat := 16;
+			result := FloatToBase(FCalculated, LFormat);
+		end;
 		rfScientific: result := FloatToStrF(FCalculated, ffExponent, 15, 1, LFormat);
 	end;
 end;

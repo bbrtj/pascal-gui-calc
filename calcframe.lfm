@@ -85,6 +85,17 @@ object CalcView: TCalcView
         GroupIndex = 1
         RadioItem = True
       end
+      object MenuItemResultFormatBinary: TMenuItem
+        Action = ActionFormatBinary
+        AutoCheck = True
+        GroupIndex = 1
+        RadioItem = True
+      end
+      object MenuItemResultFormatOctal: TMenuItem
+        Action = ActionFormatOctal
+        AutoCheck = True
+        RadioItem = True
+      end
       object MenuItemResultFormatHex: TMenuItem
         Action = ActionFormatHexadecimal
         AutoCheck = True
@@ -141,6 +152,14 @@ object CalcView: TCalcView
     object ActionFormatScientific: TAction
       Caption = 'Scientific'
       OnExecute = ActionFormatScientificExecute
+    end
+    object ActionFormatBinary: TAction
+      Caption = 'Binary'
+      OnExecute = ActionFormatBinaryExecute
+    end
+    object ActionFormatOctal: TAction
+      Caption = 'Octal'
+      OnExecute = ActionFormatOctalExecute
     end
   end
 end

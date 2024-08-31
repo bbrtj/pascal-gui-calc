@@ -6,23 +6,27 @@ interface
 
 uses SysUtils, Math, PNBase;
 
-function FloatToHex(Value: Extended; const Settings: TFormatSettings): String;
+function FloatToBase(Value: Extended; const Settings: TFormatSettings): String;
 
 implementation
 
 { helper }
-function IntToHex(Value: Int64): String;
+function IntToDigitBase(Value: Int64; Base: UInt8 = 10): String;
 const
 	HexValues: Array[0 .. 15] of Char = '0123456789ABCDEF';
 begin
+	if (Base > 16) or (Base < 2) then
+		raise Exception.Create('Invalid base');
+
 	result := '';
 	repeat
-		result := HexValues[Value mod 16] + result;
-		Value := Value div 16;
+		result := HexValues[Value mod Base] + result;
+		Value := Value div Base;
 	until Value = 0;
 end;
 
-function FloatToHex(Value: Extended; const Settings: TFormatSettings): String;
+{ small hack: uses currency fields from TFormatSettings to specify base }
+function FloatToBase(Value: Extended; const Settings: TFormatSettings): String;
 const
 	cLongestFraction = 10;
 var
@@ -35,16 +39,16 @@ begin
 		Value := -1 * Value;
 	end;
 
-	result += '0x';
-	result += IntToHex(Floor(Value));
+	result += Settings.CurrencyString;
+	result += IntToDigitBase(Floor(Value), Settings.CurrencyFormat);
 
 	LFraction := Value - Floor(Value);
-	if LFraction < 1 / Power(16, cLongestFraction) then exit;
+	if LFraction < 1 / Power(Settings.CurrencyFormat, cLongestFraction) then exit;
 
 	result += Settings.DecimalSeparator;
 	for I := 1 to cLongestFraction do begin
-		LFraction *= 16;
-		result += IntToHex(Floor(LFraction));
+		LFraction *= Settings.CurrencyFormat;
+		result += IntToDigitBase(Floor(LFraction), Settings.CurrencyFormat);
 		LFraction -= Floor(LFraction);
 	end;
 end;
