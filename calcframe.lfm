@@ -1,11 +1,11 @@
 object CalcView: TCalcView
   Left = 0
-  Height = 749
+  Height = 718
   Top = 0
-  Width = 1366
+  Width = 1316
   AutoSize = True
-  ClientHeight = 749
-  ClientWidth = 1366
+  ClientHeight = 718
+  ClientWidth = 1316
   ParentFont = False
   TabOrder = 0
   OnMouseWheel = FrameMouseWheel
@@ -79,6 +79,19 @@ object CalcView: TCalcView
     Anchors = [akTop, akRight]
     Caption = 'ErrorLabel'
     Font.Color = 204
+    ParentFont = False
+  end
+  object WarningLabel: TLabel
+    AnchorSideTop.Control = Expression
+    AnchorSideRight.Control = Expression
+    AnchorSideRight.Side = asrBottom
+    Left = 766
+    Height = 15
+    Top = 0
+    Width = 82
+    Anchors = [akTop, akRight]
+    Caption = 'WarningLabel'
+    Font.Color = 7961200
     ParentFont = False
   end
   object CalcMenu: TPopupMenu

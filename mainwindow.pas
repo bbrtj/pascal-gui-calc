@@ -251,6 +251,7 @@ begin
 		FileContents := TStringList.Create;
 		FileContents.LoadFromFile(GlobalCalcState.SavedAs);
 
+		// TODO: save and load presentation format
 		for Line in FileContents do begin
 			LineParts := SplitString(Line, ':');
 			if length(LineParts) <> 2 then

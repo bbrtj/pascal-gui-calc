@@ -25,6 +25,7 @@ type
 		ActionRename: TAction;
 		ActionRemove: TAction;
 		ErrorLabel: TLabel;
+		WarningLabel: TLabel;
 		MenuButton: TButton;
 		CalculatorActions: TActionList;
 		CalcButton: TButton;
@@ -72,6 +73,7 @@ type
 		function GetContent(): String;
 		procedure WriteResult();
 		procedure SetError(const Error: String);
+		procedure SetWarning(const Warning: String);
 
 		property Content: String read GetContent write SetContent;
 		property Handler: TCalcHandler read FHandler write FHandler;
@@ -267,7 +269,7 @@ var
 begin
 	CalcResultEdit.Text := FHandler.GetFormatted(LOverflow);
 	if LOverflow then
-		SetError('Warning: Long number, result may not be accurate')
+		SetWarning('Long number, result may not be accurate')
 	else
 		SetError('');
 end;
@@ -275,6 +277,13 @@ end;
 procedure TCalcView.SetError(const Error: String);
 begin
 	ErrorLabel.Caption := Error;
+	WarningLabel.Caption := '';
+end;
+
+procedure TCalcView.SetWarning(const Warning: String);
+begin
+	WarningLabel.Caption := Warning;
+	ErrorLabel.Caption := '';
 end;
 
 initialization
