@@ -10,7 +10,7 @@ uses
 	athreads,
 	{$ENDIF}
 	Interfaces, // this includes the LCL widgetset
-	Forms, MainWindow,
+	Forms, MainWindow, CalcFormatters,
 	{ you can add units after this }
 	SysUtils;
 

@@ -44,13 +44,15 @@
               <StackChecks Value="True"/>
             </Checks>
             <VerifyObjMethodCallValidity Value="True"/>
+            <Optimizations>
+              <OptimizationLevel Value="0"/>
+            </Optimizations>
           </CodeGeneration>
           <Linking>
             <Debugging>
-              <DebugInfoType Value="dsDwarf3"/>
+              <DebugInfoType Value="dsDwarf2Set"/>
               <UseHeaptrc Value="True"/>
               <TrashVariables Value="True"/>
-              <UseExternalDbgSyms Value="True"/>
             </Debugging>
             <Options>
               <Win32>
@@ -227,7 +229,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="5">
+    <Units Count="6">
       <Unit0>
         <Filename Value="calc.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -258,6 +260,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="CalcTypes"/>
       </Unit4>
+      <Unit5>
+        <Filename Value="calcformatters.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CalcFormatters"/>
+      </Unit5>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -279,7 +286,7 @@
     </Linking>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="3">
+    <Exceptions Count="3" IgnoreAll="True">
       <Item1>
         <Name Value="EAbort"/>
       </Item1>

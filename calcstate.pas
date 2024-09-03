@@ -29,7 +29,7 @@ type
 		destructor Destroy; override;
 
 		procedure Calculate(const Expr: String);
-		function GetFormatted(): String;
+		function GetFormatted(var Overflow: Boolean): String;
 		function RenameVariable(const Expr, OldName, NewName: String): String;
 
 		property Name: ShortString read FName write SetName;
@@ -100,27 +100,33 @@ begin
 	FCalculated := FParser.GetResult;
 end;
 
-function TCalcHandler.GetFormatted(): String;
+function TCalcHandler.GetFormatted(var Overflow: Boolean): String;
 var
 	LFormat: TFormatSettings;
 begin
 	LFormat.DecimalSeparator := cDecimalSeparator;
+	Overflow := False;
+
 	case FResultFormat of
-		rfDecimal: result := FloatToStr(FCalculated, LFormat);
+		rfDecimal: begin
+			LFormat.CurrencyString := '';
+			LFormat.CurrencyFormat := 10;
+			result := FloatToBase(FCalculated, LFormat, Overflow);
+		end;
 		rfBinary: begin
 			LFormat.CurrencyString := '0b';
 			LFormat.CurrencyFormat := 2;
-			result := FloatToBase(FCalculated, LFormat);
+			result := FloatToBase(FCalculated, LFormat, Overflow);
 		end;
 		rfOctal: begin
 			LFormat.CurrencyString := '0o';
 			LFormat.CurrencyFormat := 8;
-			result := FloatToBase(FCalculated, LFormat);
+			result := FloatToBase(FCalculated, LFormat, Overflow);
 		end;
 		rfHexadecimal: begin
 			LFormat.CurrencyString := '0x';
 			LFormat.CurrencyFormat := 16;
-			result := FloatToBase(FCalculated, LFormat);
+			result := FloatToBase(FCalculated, LFormat, Overflow);
 		end;
 		rfScientific: result := FloatToStrF(FCalculated, ffExponent, 15, 1, LFormat);
 	end;

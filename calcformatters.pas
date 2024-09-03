@@ -6,31 +6,39 @@ interface
 
 uses SysUtils, Math, PNBase;
 
-function FloatToBase(Value: Extended; const Settings: TFormatSettings): String;
+function FloatToBase(Value: TNumber; const Settings: TFormatSettings; var Overflow: Boolean): String;
 
 implementation
 
-{ helper }
-function IntToDigitBase(Value: Int64; Base: UInt8 = 10): String;
 const
-	HexValues: Array[0 .. 15] of Char = '0123456789ABCDEF';
+	cDigits: Array[0 .. 15] of Char = '0123456789ABCDEF';
+	cFormattingPrecision = 15;
+
+{ helper }
+function IntToDigitBase(Value: TNumber; Base: UInt8 = 10): String;
+var
+	LMod: TNumber;
 begin
 	if (Base > 16) or (Base < 2) then
 		raise Exception.Create('Invalid base');
 
 	result := '';
 	repeat
-		result := HexValues[Value mod Base] + result;
-		Value := Value div Base;
+		Value := Value / Base;
+		LMod := Frac(Value) * Base;
+		result := cDigits[Round(LMod)] + result;
+		Value := Int(Value);
 	until Value = 0;
 end;
 
 { small hack: uses currency fields from TFormatSettings to specify base }
-function FloatToBase(Value: Extended; const Settings: TFormatSettings): String;
-const
-	cLongestFraction = 10;
+function FloatToBase(Value: TNumber; const Settings: TFormatSettings; var Overflow: Boolean): String;
 var
-	LFraction: Extended;
+	LDigits: Int32;
+	LFraction: TNumber;
+	LFractionDigits: Int32;
+	LFractionDigitsUsed: Int32;
+	LFractionString: String;
 	I: Int32;
 begin
 	result := '';
@@ -40,17 +48,29 @@ begin
 	end;
 
 	result += Settings.CurrencyString;
-	result += IntToDigitBase(Floor(Value), Settings.CurrencyFormat);
+	result += IntToDigitBase(Int(Value), Settings.CurrencyFormat);
+	LDigits := Floor(Log10(Value));
 
-	LFraction := Value - Floor(Value);
-	if LFraction < 1 / Power(Settings.CurrencyFormat, cLongestFraction) then exit;
+	LFraction := Frac(Value);
+	LFractionDigits := cFormattingPrecision - LDigits;
+	LFraction := RoundTo(LFraction, -LFractionDigits);
 
-	result += Settings.DecimalSeparator;
-	for I := 1 to cLongestFraction do begin
-		LFraction *= Settings.CurrencyFormat;
-		result += IntToDigitBase(Floor(LFraction), Settings.CurrencyFormat);
-		LFraction -= Floor(LFraction);
+	// TODO: these are not actually digits in the loop, so it needs more work
+	LFractionString := '';
+	LFractionDigitsUsed := 0;
+	for I := 1 to LFractionDigits do begin
+		LFraction := RoundTo(LFraction * Settings.CurrencyFormat, -LFractionDigits + I);
+		if LFraction = 0 then break;
+
+		LFractionString += IntToDigitBase(Int(LFraction), Settings.CurrencyFormat);
+		LFraction := Frac(LFraction);
+		Inc(LFractionDigitsUsed);
 	end;
+
+	if Length(LFractionString) > 0 then
+		result += Settings.DecimalSeparator + LFractionString;
+
+	Overflow := LDigits + LFractionDigitsUsed >= cFormattingPrecision;
 end;
 
 end.

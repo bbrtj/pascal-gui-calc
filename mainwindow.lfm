@@ -78,6 +78,11 @@ object MainForm: TMainForm
       ShortCut = 24643
       OnExecute = ActionCopyTextExecute
     end
+    object ActionNextFormat: TAction
+      Caption = 'ActionNextFormat'
+      ShortCut = 24646
+      OnExecute = ActionNextFormatExecute
+    end
   end
   object MainMenu: TMainMenu
     Left = 149

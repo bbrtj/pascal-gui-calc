@@ -14,6 +14,7 @@ type
 	{ TCalcView }
 
  	TCalcView = class(TFrame)
+		ActionNextFormat: TAction;
 		ActionFormatBinary: TAction;
 		ActionFormatOctal: TAction;
 		ActionFormatDecimal: TAction;
@@ -23,6 +24,7 @@ type
 		ActionCalculate: TAction;
 		ActionRename: TAction;
 		ActionRemove: TAction;
+		ErrorLabel: TLabel;
 		MenuButton: TButton;
 		CalculatorActions: TActionList;
 		CalcButton: TButton;
@@ -30,6 +32,7 @@ type
 		CalcResultEdit: TEdit;
 		Expression: TGroupBox;
 		LabelEquals: TLabel;
+		MenuItemNextResultFormat: TMenuItem;
 		MenuItemResultFormatBinary: TMenuItem;
 		MenuItemResultFormatOctal: TMenuItem;
 		MenuItemResultFormat: TMenuItem;
@@ -42,6 +45,7 @@ type
 		MenuItemRename: TMenuItem;
 		CalcMenu: TPopupMenu;
 		Separator1: TMenuItem;
+		Separator2: TMenuItem;
 		procedure ActionCopyTextExecute(Sender: TObject);
 		procedure ActionCalculateExecute(Sender: TObject);
 		procedure ActionFormatBinaryExecute(Sender: TObject);
@@ -49,6 +53,7 @@ type
 		procedure ActionFormatHexadecimalExecute(Sender: TObject);
 		procedure ActionFormatOctalExecute(Sender: TObject);
 		procedure ActionFormatScientificExecute(Sender: TObject);
+		procedure ActionNextFormatExecute(Sender: TObject);
 		procedure ActionRemoveExecute(Sender: TObject);
 		procedure ActionRenameExecute(Sender: TObject);
 		procedure MenuButtonClick(Sender: TObject);
@@ -66,6 +71,7 @@ type
 		procedure SetContent(const Content: String);
 		function GetContent(): String;
 		procedure WriteResult();
+		procedure SetError(const Error: String);
 
 		property Content: String read GetContent write SetContent;
 		property Handler: TCalcHandler read FHandler write FHandler;
@@ -120,6 +126,31 @@ procedure TCalcView.ActionFormatScientificExecute(Sender: TObject);
 begin
 	FHandler.ResultFormat := rfScientific;
 	self.WriteResult();
+end;
+
+procedure TCalcView.ActionNextFormatExecute(Sender: TObject);
+var
+	NextFormatTag: Integer;
+	I: Integer;
+	MenuItems: Array[0 .. 4] of TMenuItem;
+begin
+	NextFormatTag := (Ord(FHandler.ResultFormat) + 1) mod (Ord(High(TResultFormat)) + 1);
+    FHandler.ResultFormat := TResultFormat(NextFormatTag);
+	self.WriteResult();
+
+	MenuItems := [
+		MenuItemResultFormatDecimal,
+		MenuItemResultFormatBinary,
+		MenuItemResultFormatOctal,
+		MenuItemResultFormatHex,
+		MenuItemResultFormatScientific
+	];
+
+	// Tag is used for marking MenuItem
+	for I := Low(MenuItems) to High(MenuItems) do begin
+		if MenuItems[I].Tag = NextFormatTag then
+			MenuItems[I].Checked := True;
+	end;
 end;
 
 procedure TCalcView.ActionCopyTextExecute(Sender: TObject);
@@ -195,21 +226,10 @@ begin
 	self.Expression.Caption := customName;
 
 	FHandler := TCalcHandler.Create(customName, self);
+	SetError('');
 end;
 
 function TCalcView.Calculate(): Boolean;
-
-	procedure ShowCalcError(const ErrType: String; const ErrMessage: String);
-	begin
-		MessageDlg(
-			'Calculation error',
-			ErrType + ' error occured while executing ' + FHandler.Name + ': ' + sLineBreak + ErrMessage,
-			mtError,
-			[mbOk],
-			0
-		);
-	end;
-
 begin
 	result := True;
 	if CalcEdit.Text <> '' then begin
@@ -219,9 +239,9 @@ begin
 			self.WriteResult();
 			result := True;
 		except
-			on E: EParsingFailed do ShowCalcError('Parsing', E.Message);
-			on E: ECalculationFailed do ShowCalcError('Evaluation', E.Message);
-			on E: Exception do ShowCalcError('Other', E.Message);
+			on E: EParsingFailed do SetError('Parsing error: ' + E.Message);
+			on E: ECalculationFailed do SetError('Evaluation error: ' + E.Message);
+			on E: Exception do SetError('Error: ' + E.Message);
 		end;
 	end;
 end;
@@ -242,8 +262,19 @@ begin
 end;
 
 procedure TCalcView.WriteResult();
+var
+	LOverflow: Boolean;
 begin
-	CalcResultEdit.Text := FHandler.GetFormatted();
+	CalcResultEdit.Text := FHandler.GetFormatted(LOverflow);
+	if LOverflow then
+		SetError('Warning: Long number, result may not be accurate')
+	else
+		SetError('');
+end;
+
+procedure TCalcView.SetError(const Error: String);
+begin
+	ErrorLabel.Caption := Error;
 end;
 
 initialization
