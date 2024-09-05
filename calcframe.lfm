@@ -65,6 +65,7 @@ object CalcView: TCalcView
       Font.CharSet = 4
       ParentFont = False
       TabOrder = 2
+      TabStop = False
       OnClick = MenuButtonClick
     end
   end
