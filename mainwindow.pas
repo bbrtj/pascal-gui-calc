@@ -386,8 +386,7 @@ var
 	CalcHandler: TCalcHandler;
 begin
 	for CalcHandler in GlobalCalcState.AllCalculators do begin
-		if not TCalcView(CalcHandler.Frame).Calculate then
-			break;
+		TCalcView(CalcHandler.Frame).Calculate;
 	end;
 end;
 
