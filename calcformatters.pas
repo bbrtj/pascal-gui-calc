@@ -12,7 +12,7 @@ implementation
 
 const
 	cDigits: Array[0 .. 15] of Char = '0123456789ABCDEF';
-	cFormattingPrecision = 15;
+	cFormattingPrecision = 16;
 
 { helper }
 function IntToDigitBase(Value: TNumber; Base: UInt8 = 10): String;
@@ -34,43 +34,66 @@ end;
 { small hack: uses currency fields from TFormatSettings to specify base }
 function FloatToBase(Value: TNumber; const Settings: TFormatSettings; var Overflow: Boolean): String;
 var
-	LDigits: Int32;
+	LFloatRec: TFloatRec;
+	LNumber: TNumber;
+	LNumberString: String;
 	LFraction: TNumber;
-	LFractionDigits: Int32;
-	LFractionDigitsUsed: Int32;
 	LFractionString: String;
+	LFractionDigits: UInt32;
+	LPrecisionOverflow: Boolean;
 	I: Int32;
 begin
-	result := '';
-	if Value < 0 then begin
-		result += '-';
-		Value := -1 * Value;
+	LNumberString := '';
+	FloatToDecimal(LFloatRec, Value, cFormattingPrecision, cFormattingPrecision);
+
+	LPrecisionOverflow := True;
+	for I := 0 to cFormattingPrecision - 1 do
+		LPrecisionOverflow := LPrecisionOverflow and (Ord(LFloatRec.Digits[I]) <> 0);
+	Overflow := LPrecisionOverflow or (Abs(LFloatRec.Exponent) >= cFormattingPrecision);
+
+	for I := 0 to LFloatRec.Exponent - 1 do begin
+		if (I < cFormattingPrecision) and (Ord(LFloatRec.Digits[I]) <> 0) then
+			LNumberString += LFloatRec.Digits[I]
+		else
+			LNumberString += '0';
 	end;
 
-	result += Settings.CurrencyString;
-	result += IntToDigitBase(Int(Value), Settings.CurrencyFormat);
-	LDigits := Floor(Log10(Value));
+	if LNumberString = '' then LNumberString := '0';
 
-	LFraction := Frac(Value);
-	LFractionDigits := cFormattingPrecision - LDigits;
-	LFraction := RoundTo(LFraction, -LFractionDigits);
-
-	// TODO: these are not actually digits in the loop, so it needs more work
 	LFractionString := '';
-	LFractionDigitsUsed := 0;
-	for I := 1 to LFractionDigits do begin
-		LFraction := RoundTo(LFraction * Settings.CurrencyFormat, -LFractionDigits + I);
+	for I := -1 downto LFloatRec.Exponent do begin
+		LFractionString += '0';
+	end;
+
+	for I := Max(LFloatRec.Exponent, 0) to cFormattingPrecision - 1 do begin
+		if Ord(LFloatRec.Digits[I]) = 0 then
+			break;
+		LFractionString += LFloatRec.Digits[I];
+	end;
+
+	LNumber := StrToFloat(LNumberString, Settings);
+	LFractionDigits := Length(LFractionString);
+	if LFractionDigits > 0 then
+		LFraction := StrToFloat('0' + Settings.DecimalSeparator + LFractionString, Settings)
+	else
+		LFraction := 0;
+
+	result := '';
+	if LFloatRec.Negative then result += '-';
+	result += Settings.CurrencyString;
+	result += IntToDigitBase(LNumber, Settings.CurrencyFormat);
+
+	LFractionString := '';
+	for I := 1 to cFormattingPrecision do begin
+		LFraction := RoundTo(LFraction * Settings.CurrencyFormat, -cFormattingPrecision + I);
 		if LFraction = 0 then break;
 
 		LFractionString += IntToDigitBase(Int(LFraction), Settings.CurrencyFormat);
 		LFraction := Frac(LFraction);
-		Inc(LFractionDigitsUsed);
 	end;
 
 	if Length(LFractionString) > 0 then
 		result += Settings.DecimalSeparator + LFractionString;
-
-	Overflow := LDigits + LFractionDigitsUsed >= cFormattingPrecision;
 end;
 
 end.
