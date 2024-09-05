@@ -12,7 +12,7 @@ implementation
 
 const
 	cDigits: Array[0 .. 15] of Char = '0123456789ABCDEF';
-	cFormattingPrecision = 16;
+	cFormattingPrecision = 15;
 
 { helper }
 function IntToDigitBase(Value: TNumber; Base: UInt8 = 10): String;
@@ -44,7 +44,7 @@ var
 	I: Int32;
 begin
 	LNumberString := '';
-	FloatToDecimal(LFloatRec, Value, cFormattingPrecision, cFormattingPrecision);
+	FloatToDecimal(LFloatRec, Value, cFormattingPrecision + 1, cFormattingPrecision);
 
 	LPrecisionOverflow := True;
 	for I := 0 to cFormattingPrecision - 1 do
