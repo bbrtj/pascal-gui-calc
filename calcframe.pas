@@ -106,30 +106,35 @@ procedure TCalcView.ActionFormatBinaryExecute(Sender: TObject);
 begin
 	FHandler.ResultFormat := rfBinary;
 	self.WriteResult();
+	(self.Owner as IFormWithCalculator).SetDirty(True);
 end;
 
 procedure TCalcView.ActionFormatDecimalExecute(Sender: TObject);
 begin
 	FHandler.ResultFormat := rfDecimal;
 	self.WriteResult();
+	(self.Owner as IFormWithCalculator).SetDirty(True);
 end;
 
 procedure TCalcView.ActionFormatHexadecimalExecute(Sender: TObject);
 begin
 	FHandler.ResultFormat := rfHexadecimal;
 	self.WriteResult();
+	(self.Owner as IFormWithCalculator).SetDirty(True);
 end;
 
 procedure TCalcView.ActionFormatOctalExecute(Sender: TObject);
 begin
 	FHandler.ResultFormat := rfOctal;
 	self.WriteResult();
+	(self.Owner as IFormWithCalculator).SetDirty(True);
 end;
 
 procedure TCalcView.ActionFormatScientificExecute(Sender: TObject);
 begin
 	FHandler.ResultFormat := rfScientific;
 	self.WriteResult();
+	(self.Owner as IFormWithCalculator).SetDirty(True);
 end;
 
 procedure TCalcView.ActionNextFormatExecute(Sender: TObject);
@@ -140,7 +145,7 @@ begin
 	FHandler.ResultFormat := TResultFormat(NextFormatTag);
 	self.FixFormatSelection;
 	self.WriteResult();
-
+	(self.Owner as IFormWithCalculator).SetDirty(True);
 end;
 
 procedure TCalcView.ActionCopyTextExecute(Sender: TObject);
