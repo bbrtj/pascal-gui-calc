@@ -13,27 +13,35 @@ object CalcView: TCalcView
   DesignTop = 30
   object Expression: TPanel
     Left = 0
-    Height = 56
+    Height = 72
     Top = 0
-    Width = 848
-    BevelOuter = bvNone
-    ClientHeight = 56
-    ClientWidth = 848
+    Width = 816
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 72
+    ClientWidth = 816
     ParentFont = False
     PopupMenu = CalcMenu
     TabOrder = 0
     UseDockManager = False
     object ExpressionName: TLabel
+      AnchorSideLeft.Control = MenuButton
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = MenuButton
+      AnchorSideTop.Side = asrCenter
       Left = 40
       Height = 15
-      Top = 0
-      Width = 27
+      Top = 13
+      Width = 31
+      BorderSpacing.Left = 8
       Caption = 'expr'
+      Font.Style = [fsBold]
+      ParentFont = False
     end
     object CalcEdit: TEdit
-      Left = 40
+      Left = 8
       Height = 27
-      Top = 24
+      Top = 36
       Width = 462
       AutoSelect = False
       Font.Height = -16
@@ -42,9 +50,13 @@ object CalcView: TCalcView
       OnChange = CalcEditChange
     end
     object CalcResultEdit: TEdit
-      Left = 528
+      AnchorSideLeft.Control = LabelEquals
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = CalcEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 492
       Height = 27
-      Top = 24
+      Top = 36
       Width = 316
       Font.Height = -16
       ParentFont = False
@@ -52,14 +64,18 @@ object CalcView: TCalcView
       TabOrder = 1
     end
     object LabelEquals: TLabel
-      Left = 501
-      Height = 25
-      Top = 24
+      AnchorSideLeft.Control = CalcEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = CalcEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 470
+      Height = 27
+      Top = 36
       Width = 22
       Alignment = taCenter
       AutoSize = False
       Caption = '='
-      Font.Height = 21
+      Font.Height = 22
       OptimalFill = True
       ParentColor = False
       ParentFont = False
@@ -67,8 +83,8 @@ object CalcView: TCalcView
     object MenuButton: TButton
       Left = 8
       Height = 25
-      Top = 24
-      Width = 27
+      Top = 8
+      Width = 24
       Caption = '≡'
       Font.CharSet = 4
       ParentFont = False
@@ -77,31 +93,39 @@ object CalcView: TCalcView
       OnClick = MenuButtonClick
     end
     object ErrorLabel: TLabel
+      AnchorSideTop.Control = MenuButton
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Expression
       AnchorSideRight.Side = asrBottom
-      Left = 786
+      Left = 744
       Height = 15
-      Top = 0
+      Top = 13
       Width = 62
       Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
       Caption = 'ErrorLabel'
       Font.Color = 204
       ParentFont = False
     end
     object WarningLabel: TLabel
+      AnchorSideTop.Control = MenuButton
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Expression
       AnchorSideRight.Side = asrBottom
-      Left = 766
+      Left = 724
       Height = 15
-      Top = 0
+      Top = 13
       Width = 82
       Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
       Caption = 'WarningLabel'
       Font.Color = 7961200
       ParentFont = False
     end
   end
   object CalcMenu: TPopupMenu
-    Left = 200
-    Top = 67
+    Left = 208
+    Top = 120
     object MenuItemCalculate: TMenuItem
       Action = ActionCalculate
     end
@@ -163,8 +187,8 @@ object CalcView: TCalcView
     end
   end
   object CalculatorActions: TActionList
-    Left = 306
-    Top = 67
+    Left = 296
+    Top = 120
     object ActionCalculate: TAction
       Caption = 'Calculate'
       ShortCut = 13
