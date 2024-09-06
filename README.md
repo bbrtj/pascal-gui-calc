@@ -1,5 +1,10 @@
 # Desktop calculator
-A GUI calculator with advanced features such as intermediate calculations and expression parsing.
+A GUI calculator with advanced features such as intermediate calculations and
+expression parsing. Allows creation of multiple independent formulas which can
+be named. Formulas can refer to other formulas by name, making it easy to
+create easy-to-modify calculations. Results can be converted to decimal,
+binary, octal, hexadecimal or scientific notation. The entire state of the
+calculator can be stored to or loaded from a file.
 
 ![Screenshot](/screen.png)
 
