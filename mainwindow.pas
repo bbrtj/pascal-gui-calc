@@ -63,7 +63,7 @@ type
 		FToRemove: TCalcHandler;
 		FOriginalTitle: String;
 
-		procedure AddCalculator(const CustomName: String = ''; const Content: String = '');
+		procedure AddCalculator(const CustomName: String = ''; const Content: String = ''; ResultFormat: TResultFormat = rfDecimal);
 		procedure DoRemoveCalculator(Arg: Int64);
 		procedure RemoveCalculator(CalcHandler: TObject);
 		procedure RenameCalculator(const OldName, NewName: String);
@@ -92,13 +92,14 @@ implementation
 
 { TMainForm }
 
-procedure TMainForm.AddCalculator(const CustomName: String; const Content: String);
+procedure TMainForm.AddCalculator(const CustomName: String; const Content: String; ResultFormat: TResultFormat);
 var
 	CalcView: TCalcView;
 begin
 	CalcView := TCalcView.Create(self, CustomName);
 	self.InsertControl(CalcView);
 	CalcView.Content := Content;
+	CalcView.Handler.ResultFormat := ResultFormat;
 
 	GlobalCalcState.AddCalculator(CalcView.Handler);
 	self.DoOnResize;
@@ -246,6 +247,8 @@ var
 	FileContents: TStringList;
 	Line: String;
 	LineParts: TStringArray;
+	ResultFormatInt: Int32;
+	ResultFormat: TResultFormat;
 begin
 	try
 		FileContents := TStringList.Create;
@@ -254,12 +257,18 @@ begin
 		// TODO: save and load presentation format
 		for Line in FileContents do begin
 			LineParts := SplitString(Line, ':');
-			if length(LineParts) <> 2 then
+			if (length(LineParts) < 2) or (length(LineParts) > 3) then
 				continue;
 			if length(LineParts[0]) = 0 then
 				continue;
 
-			self.AddCalculator(LineParts[0], LineParts[1]);
+			if (length(LineParts) < 3) or not TryStrToInt(LineParts[2], ResultFormatInt) then
+				ResultFormatInt := Ord(Low(TResultFormat));
+
+			if (ResultFormatInt >= Ord(Low(TResultFormat))) and (ResultFormatInt <= Ord(High(TResultFormat))) then
+				ResultFormat := TResultFormat(ResultFormatInt);
+
+			self.AddCalculator(LineParts[0], LineParts[1], ResultFormat);
 		end;
 
 	finally
@@ -278,6 +287,8 @@ begin
 			CalcHandler.Name
 			+ ':'
 			+ TCalcView(CalcHandler.Frame).Content
+			+ ':'
+			+ IntToStr(Ord(CalcHandler.ResultFormat))
 		);
 	end;
 
