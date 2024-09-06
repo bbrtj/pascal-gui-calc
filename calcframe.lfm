@@ -11,21 +11,29 @@ object CalcView: TCalcView
   OnMouseWheel = FrameMouseWheel
   DesignLeft = 720
   DesignTop = 30
-  object Expression: TGroupBox
+  object Expression: TPanel
     Left = 0
-    Height = 66
+    Height = 56
     Top = 0
     Width = 848
-    Caption = 'expr'
-    ClientHeight = 42
-    ClientWidth = 842
+    BevelOuter = bvNone
+    ClientHeight = 56
+    ClientWidth = 848
     ParentFont = False
     PopupMenu = CalcMenu
     TabOrder = 0
+    UseDockManager = False
+    object ExpressionName: TLabel
+      Left = 40
+      Height = 15
+      Top = 0
+      Width = 27
+      Caption = 'expr'
+    end
     object CalcEdit: TEdit
       Left = 40
       Height = 27
-      Top = 7
+      Top = 24
       Width = 462
       AutoSelect = False
       Font.Height = -16
@@ -34,9 +42,9 @@ object CalcView: TCalcView
       OnChange = CalcEditChange
     end
     object CalcResultEdit: TEdit
-      Left = 524
+      Left = 528
       Height = 27
-      Top = 7
+      Top = 24
       Width = 316
       Font.Height = -16
       ParentFont = False
@@ -46,12 +54,12 @@ object CalcView: TCalcView
     object LabelEquals: TLabel
       Left = 501
       Height = 25
-      Top = 7
+      Top = 24
       Width = 22
       Alignment = taCenter
       AutoSize = False
       Caption = '='
-      Font.Height = 22
+      Font.Height = 21
       OptimalFill = True
       ParentColor = False
       ParentFont = False
@@ -59,7 +67,7 @@ object CalcView: TCalcView
     object MenuButton: TButton
       Left = 8
       Height = 25
-      Top = 7
+      Top = 24
       Width = 27
       Caption = '≡'
       Font.CharSet = 4
@@ -68,32 +76,28 @@ object CalcView: TCalcView
       TabStop = False
       OnClick = MenuButtonClick
     end
-  end
-  object ErrorLabel: TLabel
-    AnchorSideTop.Control = Expression
-    AnchorSideRight.Control = Expression
-    AnchorSideRight.Side = asrBottom
-    Left = 786
-    Height = 15
-    Top = 0
-    Width = 62
-    Anchors = [akTop, akRight]
-    Caption = 'ErrorLabel'
-    Font.Color = 204
-    ParentFont = False
-  end
-  object WarningLabel: TLabel
-    AnchorSideTop.Control = Expression
-    AnchorSideRight.Control = Expression
-    AnchorSideRight.Side = asrBottom
-    Left = 766
-    Height = 15
-    Top = 0
-    Width = 82
-    Anchors = [akTop, akRight]
-    Caption = 'WarningLabel'
-    Font.Color = 7961200
-    ParentFont = False
+    object ErrorLabel: TLabel
+      AnchorSideRight.Side = asrBottom
+      Left = 786
+      Height = 15
+      Top = 0
+      Width = 62
+      Anchors = [akTop, akRight]
+      Caption = 'ErrorLabel'
+      Font.Color = 204
+      ParentFont = False
+    end
+    object WarningLabel: TLabel
+      AnchorSideRight.Side = asrBottom
+      Left = 766
+      Height = 15
+      Top = 0
+      Width = 82
+      Anchors = [akTop, akRight]
+      Caption = 'WarningLabel'
+      Font.Color = 7961200
+      ParentFont = False
+    end
   end
   object CalcMenu: TPopupMenu
     Left = 200

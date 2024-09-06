@@ -6,7 +6,7 @@ interface
 
 uses
 	SysUtils, Classes, Math, Forms, Controls, StdCtrls,
-	Dialogs, Menus, Buttons, ActnList, Clipbrd,
+	Dialogs, Menus, Buttons, ActnList, Clipbrd, ExtCtrls,
 	CalcState, CalcTypes, PNBase;
 
 type
@@ -24,15 +24,16 @@ type
 		ActionCalculate: TAction;
 		ActionRename: TAction;
 		ActionRemove: TAction;
-		ErrorLabel: TLabel;
-		WarningLabel: TLabel;
-		MenuButton: TButton;
-		CalculatorActions: TActionList;
-		CalcButton: TButton;
 		CalcEdit: TEdit;
 		CalcResultEdit: TEdit;
-		Expression: TGroupBox;
+		ErrorLabel: TLabel;
+		Expression: TPanel;
+		ExpressionName: TLabel;
 		LabelEquals: TLabel;
+		MenuButton: TButton;
+		WarningLabel: TLabel;
+		CalculatorActions: TActionList;
+		CalcButton: TButton;
 		MenuItemNextResultFormat: TMenuItem;
 		MenuItemResultFormatBinary: TMenuItem;
 		MenuItemResultFormatOctal: TMenuItem;
@@ -190,7 +191,7 @@ begin
 		OldName
 	);
 
-	self.Expression.Caption := NewName;
+	self.ExpressionName.Caption := NewName;
 	self.Handler.Name := NewName;
 	(self.Owner as IFormWithCalculator).RenameCalculator(OldName, NewName);
 	(self.Owner as IFormWithCalculator).SetDirty(True);
@@ -222,10 +223,10 @@ begin
 
 	inc(LastView);
 	if customName = '' then
-		customName := self.Expression.Caption + IntToStr(LastView);
+		customName := self.ExpressionName.Caption + IntToStr(LastView);
 
 	self.Name := self.Name + IntToStr(LastView);
-	self.Expression.Caption := customName;
+	self.ExpressionName.Caption := customName;
 
 	FHandler := TCalcHandler.Create(customName, self);
 	SetError('');
@@ -276,14 +277,16 @@ end;
 
 procedure TCalcView.SetError(const Error: String);
 begin
+	ErrorLabel.Visible := True;
 	ErrorLabel.Caption := Error;
-	WarningLabel.Caption := '';
+	WarningLabel.Visible := False;
 end;
 
 procedure TCalcView.SetWarning(const Warning: String);
 begin
+	WarningLabel.Visible := True;
 	WarningLabel.Caption := Warning;
-	ErrorLabel.Caption := '';
+	ErrorLabel.Visible := False;
 end;
 
 initialization

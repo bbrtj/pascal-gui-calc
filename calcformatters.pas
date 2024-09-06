@@ -46,6 +46,15 @@ begin
 	LNumberString := '';
 	FloatToDecimal(LFloatRec, Value, cFormattingPrecision + 1, cFormattingPrecision);
 
+	result := '';
+	if LFloatRec.Negative then result += '-';
+
+	// seems like some of the string to float routines use shortstrings
+	if LFloatRec.Exponent >= $ff then
+		exit(result + 'Inf');
+	if LFloatRec.Exponent < -$ff then
+		exit('0');
+
 	LPrecisionOverflow := True;
 	for I := 0 to cFormattingPrecision - 1 do
 		LPrecisionOverflow := LPrecisionOverflow and (Ord(LFloatRec.Digits[I]) <> 0);
@@ -78,8 +87,6 @@ begin
 	else
 		LFraction := 0;
 
-	result := '';
-	if LFloatRec.Negative then result += '-';
 	result += Settings.CurrencyString;
 	result += IntToDigitBase(LNumber, Settings.CurrencyFormat);
 
