@@ -100,6 +100,7 @@ begin
 	self.InsertControl(CalcView);
 	CalcView.Content := Content;
 	CalcView.Handler.ResultFormat := ResultFormat;
+	CalcView.FixFormatSelection;
 
 	GlobalCalcState.AddCalculator(CalcView.Handler);
 	self.DoOnResize;

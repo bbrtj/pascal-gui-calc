@@ -75,6 +75,7 @@ type
 		procedure WriteResult();
 		procedure SetError(const Error: String);
 		procedure SetWarning(const Warning: String);
+		procedure FixFormatSelection();
 
 		property Content: String read GetContent write SetContent;
 		property Handler: TCalcHandler read FHandler write FHandler;
@@ -134,26 +135,12 @@ end;
 procedure TCalcView.ActionNextFormatExecute(Sender: TObject);
 var
 	NextFormatTag: Integer;
-	I: Integer;
-	MenuItems: Array[0 .. 4] of TMenuItem;
 begin
 	NextFormatTag := (Ord(FHandler.ResultFormat) + 1) mod (Ord(High(TResultFormat)) + 1);
-    FHandler.ResultFormat := TResultFormat(NextFormatTag);
+	FHandler.ResultFormat := TResultFormat(NextFormatTag);
+	self.FixFormatSelection;
 	self.WriteResult();
 
-	MenuItems := [
-		MenuItemResultFormatDecimal,
-		MenuItemResultFormatBinary,
-		MenuItemResultFormatOctal,
-		MenuItemResultFormatHex,
-		MenuItemResultFormatScientific
-	];
-
-	// Tag is used for marking MenuItem
-	for I := Low(MenuItems) to High(MenuItems) do begin
-		if MenuItems[I].Tag = NextFormatTag then
-			MenuItems[I].Checked := True;
-	end;
 end;
 
 procedure TCalcView.ActionCopyTextExecute(Sender: TObject);
@@ -287,6 +274,26 @@ begin
 	WarningLabel.Visible := True;
 	WarningLabel.Caption := Warning;
 	ErrorLabel.Visible := False;
+end;
+
+procedure TCalcView.FixFormatSelection();
+var
+	I: Integer;
+	MenuItems: Array[0 .. 4] of TMenuItem;
+begin
+	MenuItems := [
+		MenuItemResultFormatDecimal,
+		MenuItemResultFormatBinary,
+		MenuItemResultFormatOctal,
+		MenuItemResultFormatHex,
+		MenuItemResultFormatScientific
+	];
+
+	// Tag is used for marking MenuItem
+	for I := Low(MenuItems) to High(MenuItems) do begin
+		if MenuItems[I].Tag = Ord(FHandler.ResultFormat) then
+			MenuItems[I].Checked := True;
+	end;
 end;
 
 initialization
