@@ -21,7 +21,8 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
-      <MinorVersionNr Value="6"/>
+      <MinorVersionNr Value="7"/>
+      <StringTable Comments="https://github.com/bbrtj/pascal-gui-calc" LegalCopyright="Bartosz Jarzyna"/>
     </VersionInfo>
     <BuildModes Count="7">
       <Item1 Name="Default" Default="True"/>
