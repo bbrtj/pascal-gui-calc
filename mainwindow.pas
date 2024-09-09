@@ -7,7 +7,7 @@ interface
 uses
 	Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ActnList,
 	ExtCtrls, Menus, StrUtils, Math, Types,
-	CalcFrame, CalcState, CalcTypes, PNBase;
+	CalcFrame, SyntaxHelp, CalcState, CalcTypes, PNBase;
 
 type
 
@@ -467,16 +467,7 @@ end;
 
 procedure TMainForm.ActionSyntaxExecute(Sender: TObject);
 begin
-	MessageDlg(
-		'Syntax reference',
-		'Available operations:' + sLineBreak + TOperationInfo.FullHelp(False)
-		+ sLineBreak + 'Available constants:' + sLineBreak
-		+ 'PI: the pi constant' + sLineBreak
-		+ 'PHI: the golden ratio' + sLineBreak,
-		mtInformation,
-		[mbOk],
-		0
-	);
+	SyntaxHelpForm.Show;
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);

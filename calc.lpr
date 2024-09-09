@@ -10,9 +10,9 @@ uses
 	athreads,
 	{$ENDIF}
 	Interfaces, // this includes the LCL widgetset
-	Forms, MainWindow, CalcFormatters,
+	Forms, lazcontrols, MainWindow, CalcFormatters,
 	{ you can add units after this }
-	SysUtils;
+	SysUtils, SyntaxHelp;
 
 {$R *.res}
 
@@ -23,6 +23,7 @@ begin
 	Application.CreateForm(TMainForm, MainForm);
 	if ParamCount > 0 then
 		MainForm.OpenFile(ParamStr(1));
+	Application.CreateForm(TSyntaxHelpForm, SyntaxHelpForm);
 	Application.Run;
 end.
 
