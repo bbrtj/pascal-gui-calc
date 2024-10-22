@@ -12,7 +12,7 @@ implementation
 
 const
 	cDigits: Array[0 .. 15] of Char = '0123456789ABCDEF';
-	cFormattingPrecision = 15;
+	cFormattingPrecision = {$IFDEF WINDOWS}12{$ELSE}15{$ENDIF};
 
 { helper }
 function IntToDigitBase(Value: TNumber; Base: UInt8 = 10): String;
