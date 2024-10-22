@@ -21,7 +21,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
-      <MinorVersionNr Value="7"/>
+      <MinorVersionNr Value="8"/>
       <StringTable Comments="https://github.com/bbrtj/pascal-gui-calc" LegalCopyright="Bartosz Jarzyna"/>
     </VersionInfo>
     <BuildModes Count="7">
@@ -281,6 +281,7 @@
         <Filename Value="syntaxhelp.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SyntaxHelpForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="SyntaxHelp"/>
       </Unit6>
