@@ -67,6 +67,7 @@ type
 	private
 		FHandler: TCalcHandler;
 
+		procedure SimulateKeyPress(Key: Char);
 	public
 		constructor Create(TheOwner: TComponent; customName: String = '');
 
@@ -93,6 +94,27 @@ implementation
 
 var
 	LastView: Cardinal;
+
+procedure TCalcView.SimulateKeyPress(Key: Char);
+var
+	LPos: TPoint;
+	LText: String;
+begin
+    LText := CalcEdit.Text;
+	LPos := CalcEdit.CaretPos;
+	if CalcEdit.SelLength > 0 then begin
+		LPos.X := CalcEdit.SelStart + 1;
+		Delete(LText, CalcEdit.SelStart + 1, CalcEdit.SelLength);
+	end
+	else begin
+	    Inc(LPos.X);
+	end;
+
+	Insert(Key, LText, LPos.X);
+    CalcEdit.Text := LText;
+    CalcEdit.CaretPos := LPos;
+
+end;
 
 procedure ResetNumbers;
 begin
@@ -196,7 +218,7 @@ procedure TCalcView.CalcEditKeyDown(Sender: TObject; var Key: Word;
 begin
 	if Key = VK_SEPARATOR then begin
 		// numpad dot should input dot, not a comma
-		CalcEdit.Text := CalcEdit.Text + '.';
+		SimulateKeyPress('.');
 		Key := VK_UNKNOWN; // handled
 	end;
 end;
