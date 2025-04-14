@@ -30,9 +30,9 @@ object CalcView: TCalcView
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = MenuButton
       AnchorSideTop.Side = asrCenter
-      Left = 41
+      Left = 40
       Height = 15
-      Top = 13
+      Top = 14
       Width = 31
       BorderSpacing.Left = 8
       Caption = 'expr'
@@ -49,6 +49,7 @@ object CalcView: TCalcView
       ParentFont = False
       TabOrder = 0
       OnChange = CalcEditChange
+      OnKeyDown = CalcEditKeyDown
     end
     object CalcResultEdit: TEdit
       AnchorSideLeft.Control = LabelEquals
@@ -71,7 +72,7 @@ object CalcView: TCalcView
       AnchorSideTop.Side = asrCenter
       Left = 480
       Height = 28
-      Top = 37
+      Top = 36
       Width = 22
       Alignment = taCenter
       AutoSize = False
@@ -98,9 +99,9 @@ object CalcView: TCalcView
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = Expression
       AnchorSideRight.Side = asrBottom
-      Left = 744
+      Left = 761
       Height = 15
-      Top = 13
+      Top = 14
       Width = 62
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 8
@@ -113,9 +114,9 @@ object CalcView: TCalcView
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = Expression
       AnchorSideRight.Side = asrBottom
-      Left = 724
+      Left = 741
       Height = 15
-      Top = 13
+      Top = 14
       Width = 82
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 8

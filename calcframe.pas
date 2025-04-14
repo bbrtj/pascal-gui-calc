@@ -5,7 +5,7 @@ unit CalcFrame;
 interface
 
 uses
-	SysUtils, Classes, Math, Forms, Controls, StdCtrls,
+	SysUtils, Classes, Math, Forms, Controls, StdCtrls, LCLType,
 	Dialogs, Menus, Buttons, ActnList, Clipbrd, ExtCtrls,
 	CalcState, CalcTypes, PNBase;
 
@@ -58,6 +58,8 @@ type
 		procedure ActionNextFormatExecute(Sender: TObject);
 		procedure ActionRemoveExecute(Sender: TObject);
 		procedure ActionRenameExecute(Sender: TObject);
+		procedure CalcEditKeyDown(Sender: TObject; var Key: Word;
+			Shift: TShiftState);
 		procedure MenuButtonClick(Sender: TObject);
 		procedure CalcEditChange(Sender: TObject);
 		procedure FrameMouseWheel(Sender: TObject; Shift: TShiftState;
@@ -187,6 +189,16 @@ begin
 	self.Handler.Name := NewName;
 	(self.Owner as IFormWithCalculator).RenameCalculator(OldName, NewName);
 	(self.Owner as IFormWithCalculator).SetDirty(True);
+end;
+
+procedure TCalcView.CalcEditKeyDown(Sender: TObject; var Key: Word;
+	Shift: TShiftState);
+begin
+	if Key = VK_SEPARATOR then begin
+		// numpad dot should input dot, not a comma
+		CalcEdit.Text := CalcEdit.Text + '.';
+		Key := VK_UNKNOWN; // handled
+	end;
 end;
 
 procedure TCalcView.MenuButtonClick(Sender: TObject);
