@@ -14,25 +14,25 @@ object MainForm: TMainForm
   ChildSizing.VerticalSpacing = 4
   ChildSizing.Layout = cclLeftToRightThenTopToBottom
   ChildSizing.ControlsPerLine = 1
+  DesignTimePPI = 98
   Menu = MainMenu
-  LCLVersion = '3.99.0.0'
-  Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
   OnDropFiles = FormDropFiles
   OnResize = FormResize
+  Scaled = False
   object ActionShortcuts: TActionList
     Left = 142
     Top = 45
     object ActionNewCalculator: TAction
       Caption = 'New calculator'
-      ShortCut = 16462
       OnExecute = ActionNewCalculatorExecute
+      ShortCut = 16462
     end
     object ActionCalculateAll: TAction
       Caption = 'Calculate All'
-      ShortCut = 8205
       OnExecute = ActionCalculateAllExecute
+      ShortCut = 8205
     end
     object ActionExitProgram: TAction
       Caption = 'Exit Program'
@@ -40,48 +40,48 @@ object MainForm: TMainForm
     end
     object ActionCalculate: TAction
       Caption = 'ActionCalculate'
-      ShortCut = 13
       OnExecute = ActionCalculateExecute
+      ShortCut = 13
     end
     object ActionNew: TAction
       Caption = 'New'
-      ShortCut = 24654
       OnExecute = ActionNewExecute
+      ShortCut = 24654
     end
     object ActionOpen: TAction
       Caption = 'Open'
-      ShortCut = 16463
       OnExecute = ActionOpenExecute
+      ShortCut = 16463
     end
     object ActionSave: TAction
       Caption = 'Save'
-      ShortCut = 16467
       OnExecute = ActionSaveExecute
+      ShortCut = 16467
     end
     object ActionSaveAs: TAction
       Caption = 'Save as...'
-      ShortCut = 24659
       OnExecute = ActionSaveAsExecute
+      ShortCut = 24659
     end
     object ActionSyntax: TAction
       Caption = 'Syntax'
-      ShortCut = 112
       OnExecute = ActionSyntaxExecute
+      ShortCut = 112
     end
     object ActionRename: TAction
       Caption = 'ActionRename'
-      ShortCut = 16466
       OnExecute = ActionRenameExecute
+      ShortCut = 16466
     end
     object ActionCopyText: TAction
       Caption = 'ActionCopyText'
-      ShortCut = 24643
       OnExecute = ActionCopyTextExecute
+      ShortCut = 24643
     end
     object ActionNextFormat: TAction
       Caption = 'ActionNextFormat'
-      ShortCut = 24646
       OnExecute = ActionNextFormatExecute
+      ShortCut = 24646
     end
   end
   object MainMenu: TMainMenu

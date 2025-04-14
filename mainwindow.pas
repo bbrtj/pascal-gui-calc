@@ -104,6 +104,8 @@ begin
 
 	GlobalCalcState.AddCalculator(CalcView.Handler);
 	self.DoOnResize;
+	if self.Visible then
+		self.FocusControl(CalcView.CalcEdit);
 end;
 
 procedure TMainForm.DoRemoveCalculator(Arg: Int64);
