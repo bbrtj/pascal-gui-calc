@@ -284,7 +284,7 @@ end;
 procedure TCalcView.FixFormatSelection();
 var
 	I: Integer;
-	MenuItems: Array[0 .. 4] of TMenuItem;
+	MenuItems: Array of TMenuItem;
 begin
 	MenuItems := [
 		MenuItemResultFormatDecimal,

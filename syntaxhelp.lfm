@@ -1,20 +1,21 @@
 object SyntaxHelpForm: TSyntaxHelpForm
   Left = 966
-  Height = 749
+  Height = 765
   Top = 250
-  Width = 1366
+  Width = 1394
   AutoSize = True
   BorderWidth = 8
   Caption = 'Help'
-  ClientHeight = 749
-  ClientWidth = 1366
-  LCLVersion = '3.99.0.0'
+  ClientHeight = 765
+  ClientWidth = 1394
+  DesignTimePPI = 98
   OnCreate = FormCreate
+  LCLVersion = '3.8.0.0'
   object HelpListFilter: TListFilterEdit
     Left = 8
     Height = 23
     Top = 8
-    Width = 400
+    Width = 408
     ButtonWidth = 23
     NumGlyphs = 1
     MaxLength = 0
@@ -24,9 +25,9 @@ object SyntaxHelpForm: TSyntaxHelpForm
   end
   object HelpList: TListBox
     Left = 8
-    Height = 200
-    Top = 32
-    Width = 400
+    Height = 204
+    Top = 33
+    Width = 408
     ItemHeight = 0
     Sorted = True
     TabOrder = 1

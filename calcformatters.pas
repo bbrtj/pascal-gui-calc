@@ -33,6 +33,10 @@ end;
 
 { small hack: uses currency fields from TFormatSettings to specify base }
 function FloatToBase(Value: TNumber; const Settings: TFormatSettings; var Overflow: Boolean): String;
+	function ValidDigit(Digit: Char): Boolean;
+	begin
+		result := (Ord(Digit) >= Ord('0')) and (Ord(Digit) <= Ord('9'));
+	end;
 var
 	LFloatRec: TFloatRec;
 	LNumber: TNumber;
@@ -61,7 +65,7 @@ begin
 	Overflow := LPrecisionOverflow or (Abs(LFloatRec.Exponent) >= cFormattingPrecision);
 
 	for I := 0 to LFloatRec.Exponent - 1 do begin
-		if (I < cFormattingPrecision) and (Ord(LFloatRec.Digits[I]) <> 0) then
+		if (I < cFormattingPrecision) and ValidDigit(LFloatRec.Digits[I]) then
 			LNumberString += LFloatRec.Digits[I]
 		else
 			LNumberString += '0';
@@ -75,7 +79,7 @@ begin
 	end;
 
 	for I := Max(LFloatRec.Exponent, 0) to cFormattingPrecision - 1 do begin
-		if Ord(LFloatRec.Digits[I]) = 0 then
+		if not ValidDigit(LFloatRec.Digits[I]) then
 			break;
 		LFractionString += LFloatRec.Digits[I];
 	end;

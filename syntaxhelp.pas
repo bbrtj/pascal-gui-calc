@@ -11,7 +11,7 @@ type
 
 	{ TSyntaxHelpForm }
 
- TSyntaxHelpForm = class(TForm)
+	TSyntaxHelpForm = class(TForm)
 		HelpList: TListBox;
 		HelpListFilter: TListFilterEdit;
 		procedure FormCreate(Sender: TObject);

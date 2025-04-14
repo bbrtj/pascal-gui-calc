@@ -18,7 +18,7 @@ uses
 
 begin
 	RequireDerivedFormResource:=True;
-  Application.Scaled:=True;
+	Application.Scaled:=True;
 	Application.Initialize;
 	Application.CreateForm(TMainForm, MainForm);
 	if ParamCount > 0 then
