@@ -43,6 +43,7 @@ type
 		SaveDialog: TSaveDialog;
 		Separator1: TMenuItem;
 		Separator2: TMenuItem;
+		TrayIcon: TTrayIcon;
 		procedure ActionCalculateExecute(Sender: TObject);
 		procedure ActionCopyTextExecute(Sender: TObject);
 		procedure ActionNewCalculatorExecute(Sender: TObject);
@@ -59,6 +60,7 @@ type
 		procedure FormCreate(Sender: TObject);
 		procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
 		procedure FormResize(Sender: TObject);
+		procedure ShowHide(Sender: TObject);
 	private
 		FToRemove: TCalcHandler;
 		FOriginalTitle: String;
@@ -351,6 +353,14 @@ end;
 procedure TMainForm.FormResize(Sender: TObject);
 begin
 	self.AdjustPosition;
+end;
+
+procedure TMainForm.ShowHide(Sender: TObject);
+begin
+	if self.Showing then
+		self.Hide
+	else
+		self.Show;
 end;
 
 procedure TMainForm.ActionNewCalculatorExecute(Sender: TObject);
