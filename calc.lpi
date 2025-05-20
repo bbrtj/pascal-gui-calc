@@ -21,7 +21,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
-      <MinorVersionNr Value="9"/>
+      <MinorVersionNr Value="10"/>
       <StringTable Comments="https://github.com/bbrtj/pascal-gui-calc" LegalCopyright="Bartosz Jarzyna"/>
     </VersionInfo>
     <BuildModes Count="7">
@@ -129,6 +129,9 @@
         </CompilerOptions>
       </Item4>
       <Item5 Name="Release Linux">
+        <MacroValues Count="1">
+          <Macro2 Name="LCLWidgetType" Value="gtk2"/>
+        </MacroValues>
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
@@ -219,8 +222,11 @@
           </Linking>
         </CompilerOptions>
       </Item7>
-      <SharedMatrixOptions Count="1">
+      <SharedMatrixOptions Count="4">
         <Item1 ID="666838823034" Modes="Release Windows Qt5,Release Linux Qt5,Release FreeBSD Qt5" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt5"/>
+        <Item2 ID="253556223505" Modes="Release Linux" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item3 ID="800245693764" Modes="Release Windows,Release FreeBSD Qt5,Release Linux,Release Linux Qt5,Release Windows Qt5" Value="-dRELEASE"/>
+        <Item4 ID="467502935894" Modes="Release Windows,Release FreeBSD Qt5,Release Linux,Release Linux Qt5,Release Windows Qt5" Value="-B"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
