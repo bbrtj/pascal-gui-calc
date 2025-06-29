@@ -13,7 +13,7 @@ type
 
 	{ TMainForm }
 
- TMainForm = class(TForm, IFormWithCalculator)
+	TMainForm = class(TForm, IFormWithCalculator)
 		ActionNextFormat: TAction;
 		ActionCopyText: TAction;
 		ActionRename: TAction;
@@ -135,10 +135,15 @@ var
 	NewContent: String;
 begin
 	for CalcHandler in GlobalCalcState.AllCalculators do begin
+		if CalcHandler.Name = NewName then
+			raise Exception.Create('This name is already in use');
+	end;
+
+	for CalcHandler in GlobalCalcState.AllCalculators do begin
 		try
-				Calculator := CalcHandler.Frame as TCalcView;
-				NewContent := CalcHandler.RenameVariable(Calculator.GetContent(), OldName, NewName);
-				Calculator.SetContent(NewContent);
+			Calculator := CalcHandler.Frame as TCalcView;
+			NewContent := CalcHandler.RenameVariable(Calculator.GetContent(), OldName, NewName);
+			Calculator.SetContent(NewContent);
 		except
 			continue;
 		end;

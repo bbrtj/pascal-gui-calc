@@ -207,10 +207,21 @@ begin
 		OldName
 	);
 
-	self.ExpressionName.Caption := NewName;
-	self.Handler.Name := NewName;
-	(self.Owner as IFormWithCalculator).RenameCalculator(OldName, NewName);
-	(self.Owner as IFormWithCalculator).SetDirty(True);
+	try
+		(self.Owner as IFormWithCalculator).RenameCalculator(OldName, NewName);
+		self.ExpressionName.Caption := NewName;
+		self.Handler.Name := NewName;
+		(self.Owner as IFormWithCalculator).SetDirty(True);
+	except
+		on E: Exception do
+			MessageDlg(
+				'Name change error',
+				'Couldn''t change name to ' + NewName + ': ' + E.Message,
+				mtError,
+				[mbOk],
+				0
+			);
+	end;
 end;
 
 procedure TCalcView.CalcEditKeyDown(Sender: TObject; var Key: Word;
